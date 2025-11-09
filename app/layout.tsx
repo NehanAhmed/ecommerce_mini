@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Momo } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const poppins = ({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "700"],
- 
+
 });
 
 
@@ -23,12 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${poppins.variable} min-h-screen w-full antialiased`}
       >
-        <Header />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
