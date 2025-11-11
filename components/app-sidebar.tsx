@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import * as React from "react"
 import {
@@ -32,11 +32,6 @@ import {
 } from "@/components/ui/sidebar"
 
 const data = {
-  user: {
-    name: "Admin User",
-    email: "admin@ecommerce.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -148,7 +143,21 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user?: {
+    username: string
+    email: string
+    avatar: string
+  }
+}
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
+  const defaultUser = {
+    name: user?.username || "Guest User",
+    email: user?.email || "guest@example.com",
+    avatar: user?.avatar || "/avatars/shadcn.jpg",
+  }
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -156,10 +165,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <a href="#">
-                <IconInnerShadowTop className="!size-5" />
+                <IconInnerShadowTop className="size-5!" />
                 <span className="text-base font-semibold">Acme Inc.</span>
               </a>
             </SidebarMenuButton>
@@ -172,7 +181,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={defaultUser} />
       </SidebarFooter>
     </Sidebar>
   )
