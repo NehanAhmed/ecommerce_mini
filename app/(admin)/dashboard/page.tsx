@@ -3,6 +3,8 @@ import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
 import { SectionCards } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
+import { columns, Order } from "@/components/table/columns"
+
 import {
   SidebarInset,
   SidebarProvider,
@@ -11,6 +13,8 @@ import {
 import data from "./data.json"
 
 export default function Page() {
+  const orders = data as Order[]
+  
   return (
     <SidebarProvider
       style={
@@ -20,7 +24,7 @@ export default function Page() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebar variant="floating"  />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
@@ -30,7 +34,7 @@ export default function Page() {
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
-              <DataTable data={data} />
+              <DataTable columns={columns} data={orders} />
             </div>
           </div>
         </div>
