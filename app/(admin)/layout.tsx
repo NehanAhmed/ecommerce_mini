@@ -4,7 +4,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { getCurrentUser } from '@/lib/action/getCurrentUser.actions'
 import React from 'react'
 
-const layout = async({ children }: { children: React.ReactNode }) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
     const userData = await getCurrentUser()
 
     const user = userData ? {
@@ -13,7 +13,7 @@ const layout = async({ children }: { children: React.ReactNode }) => {
         avatar: "/avatars/shadcn.jpg",
     } : undefined
     return (
-        <main>
+        <main className='w-full min-h-screen'>
 
             <SidebarProvider
                 style={
@@ -26,7 +26,11 @@ const layout = async({ children }: { children: React.ReactNode }) => {
                 <AppSidebar user={user} variant="floating" />
                 <SidebarInset>
                     <SiteHeader />
-                    {children}
+                    
+
+                        {children}
+                    
+
                 </SidebarInset>
             </SidebarProvider>
         </main>

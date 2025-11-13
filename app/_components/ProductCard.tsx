@@ -19,20 +19,20 @@ export default function ProductCard() {
     badge: 'Best Seller',
     discount: 25,
     sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['#000000', '#6B7280', '#3B82F6'],
+    colors: ['var(--foreground)', 'var(--muted)', 'var(--primary)'],
     inStock: true
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-8">
+    <div className="min-h-screen bg-muted flex items-center justify-center p-8">
       <Card 
-        className="w-full max-w-sm overflow-hidden transition-all duration-300 hover:shadow-2xl border-0 bg-white"
+        className="w-full max-w-sm overflow-hidden transition-all duration-300 hover:shadow-2xl border-0 bg-card"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <CardContent className="p-0">
           {/* Image Container */}
-          <div className="relative overflow-hidden bg-slate-100 group">
+          <div className="relative overflow-hidden bg-muted group">
             <img 
               src={product.image}
               alt={product.name}
@@ -41,10 +41,10 @@ export default function ProductCard() {
             
             {/* Badges */}
             <div className="absolute top-4 left-4 flex gap-2">
-              <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              <span className="bg-destructive text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
                 -{product.discount}%
               </span>
-              <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
                 {product.badge}
               </span>
             </div>
@@ -52,10 +52,10 @@ export default function ProductCard() {
             {/* Wishlist Button */}
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
-              className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+              className="absolute top-4 right-4 p-2 bg-card/90 backdrop-blur-sm rounded-full shadow-lg transition-all duration-300 hover:scale-110"
             >
               <Heart 
-                className={`w-5 h-5 transition-colors ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-slate-700'}`}
+                className={`w-5 h-5 transition-colors ${isWishlisted ? 'fill-destructive text-destructive' : 'text-foreground'}`}
               />
             </button>
 
@@ -68,7 +68,7 @@ export default function ProductCard() {
               <Button 
                 size="sm" 
                 variant="secondary"
-                className="bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg"
+                className="bg-card/90 backdrop-blur-sm hover:bg-card shadow-lg"
               >
                 <Eye className="w-4 h-4 mr-1" />
                 Quick View
@@ -84,38 +84,38 @@ export default function ProductCard() {
                 {[...Array(5)].map((_, i) => (
                   <Star 
                     key={i} 
-                    className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
+                    className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-accent text-accent' : 'text-muted-foreground'}`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-slate-600">
+              <span className="text-sm text-muted-foreground">
                 {product.rating} ({product.reviews})
               </span>
             </div>
 
             {/* Title */}
-            <h3 className="text-xl font-bold text-slate-900 leading-tight">
+            <h3 className="text-xl font-bold text-foreground leading-tight">
               {product.name}
             </h3>
 
             {/* Price */}
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-bold text-slate-900">
+              <span className="text-3xl font-bold text-foreground">
                 ${product.price}
               </span>
-              <span className="text-lg text-slate-400 line-through">
+              <span className="text-lg text-muted-foreground line-through">
                 ${product.originalPrice}
               </span>
             </div>
 
             {/* Colors */}
             <div>
-              <p className="text-sm font-medium text-slate-700 mb-2">Colors</p>
+              <p className="text-sm font-medium text-foreground mb-2">Colors</p>
               <div className="flex gap-2">
                 {product.colors.map((color, index) => (
                   <button
                     key={index}
-                    className="w-8 h-8 rounded-full border-2 border-slate-200 hover:border-slate-400 transition-all hover:scale-110"
+                    className="w-8 h-8 rounded-full border-2 border-border hover:border-foreground transition-all hover:scale-110"
                     style={{ backgroundColor: color }}
                   />
                 ))}
@@ -124,7 +124,7 @@ export default function ProductCard() {
 
             {/* Sizes */}
             <div>
-              <p className="text-sm font-medium text-slate-700 mb-2">Size</p>
+              <p className="text-sm font-medium text-foreground mb-2">Size</p>
               <div className="flex gap-2">
                 {product.sizes.map((size) => (
                   <button
@@ -132,8 +132,8 @@ export default function ProductCard() {
                     onClick={() => setSelectedSize(size)}
                     className={`px-4 py-2 rounded-lg font-medium transition-all ${
                       selectedSize === size
-                        ? 'bg-slate-900 text-white'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        ? 'bg-foreground text-background'
+                        : 'bg-muted text-foreground hover:bg-muted/80'
                     }`}
                   >
                     {size}
@@ -144,13 +144,13 @@ export default function ProductCard() {
 
             {/* Stock Status */}
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-              <span className="text-sm text-green-600 font-medium">In Stock</span>
+              <div className="w-2 h-2 rounded-full bg-accent"></div>
+              <span className="text-sm text-accent font-medium">In Stock</span>
             </div>
 
             {/* Add to Cart Button */}
             <Button 
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+              className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold py-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               Add to Cart
