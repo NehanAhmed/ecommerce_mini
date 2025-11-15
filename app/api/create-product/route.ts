@@ -1,25 +1,8 @@
-import { IProduct, Product } from "@/database";
+import { Product } from "@/database";
 import connectDB from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-
-// Type for the validated product data
-interface ProductInput {
-    name: string;
-    description: string;
-    price: number;
-    compareAtPrice?: number;
-    category: string;
-    brand?: string;
-    images: string[];
-    stock: number;
-    sku: string;
-    isActive?: boolean;
-    isFeatured?: boolean;
-    specifications?: Record<string, string>;
-    tags?: string[];
-    addedBy: string;
-}
+import type { ProductInput } from "@/types/product";
 
 // Validation helper
 function validateProductInput(data: Record<string, unknown>): {
@@ -183,12 +166,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // Connect to database
         await connectDB();
 
-        // Parse form data
-        const formData = await req.formData();
-        const rawData = Object.fromEntries(formData.entries());
+        // Parse JSON body
+        const rawBody = await req.json().catch(() => null);
 
-        // Validate input
-        const validation = validateProductInput(rawData);
+        if (!rawBody || typeof rawBody !== "object" || Array.isArray(rawBody)) {
+            return NextResponse.json(
+                {
+                    message: "Invalid request body",
+                    errors: ["Request body must be a JSON object"],
+                },
+                { status: 400 }
+            );
+        }
+
+        const validation = validateProductInput(rawBody as Record<string, unknown>);
 
         if (!validation.isValid) {
             return NextResponse.json(

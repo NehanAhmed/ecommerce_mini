@@ -1,18 +1,43 @@
 "use client";
-import dynamic from 'next/dynamic';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Upload, X, Plus, Minus, Tag, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import 
-    import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
+import type { ProductInput } from '@/types/product';
+
+interface SpecificationField {
+    key: string;
+    value: string;
+}
+
+interface CreateProductFormState {
+    name: string;
+    slug: string;
+    description: string;
+    price: string;
+    compareAtPrice: string;
+    category: string;
+    brand: string;
+    images: string[];
+    stock: string;
+    sku: string;
+    isActive: boolean;
+    isFeatured: boolean;
+    specifications: SpecificationField[];
+    tags: string[];
+}
+
+// TODO: replace with real admin user id from auth/session when available
+const DEMO_ADMIN_ID = '6740a1111111111111111111';
+
 export default function CreateProductPage() {
+    const router = useRouter();
 
-    
-
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<CreateProductFormState>({
         name: '',
         slug: '',
         description: '',
@@ -26,13 +51,18 @@ export default function CreateProductPage() {
         isActive: true,
         isFeatured: false,
         specifications: [{ key: '', value: '' }],
-        tags: []
+        tags: [],
     });
 
-    const [tagInput, setTagInput] = useState('');
-    const [imagePreview, setImagePreview] = useState([]);
+    const [tagInput, setTagInput] = useState<string>('');
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [errors, setErrors] = useState<string[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -46,7 +76,11 @@ export default function CreateProductPage() {
         }
     };
 
-    const handleSpecChange = (index, field, value) => {
+    const handleSpecChange = (
+        index: number,
+        field: keyof SpecificationField,
+        value: string,
+    ) => {
         const newSpecs = [...formData.specifications];
         newSpecs[index][field] = value;
         setFormData(prev => ({ ...prev, specifications: newSpecs }));
@@ -59,7 +93,7 @@ export default function CreateProductPage() {
         }));
     };
 
-    const removeSpecification = (index) => {
+    const removeSpecification = (index: number) => {
         setFormData(prev => ({
             ...prev,
             specifications: prev.specifications.filter((_, i) => i !== index)
@@ -76,26 +110,124 @@ export default function CreateProductPage() {
         }
     };
 
-    const removeTag = (tagToRemove) => {
+    const removeTag = (tagToRemove: string) => {
         setFormData(prev => ({
             ...prev,
             tags: prev.tags.filter(tag => tag !== tagToRemove)
         }));
     };
 
-    const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
-        const newPreviews = files.map(file => URL.createObjectURL(file));
-        setImagePreview(prev => [...prev, ...newPreviews]);
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files ?? []);
+        const newPreviews = files.map((file) => URL.createObjectURL(file));
+        setImagePreview((prev) => [...prev, ...newPreviews]);
+        setFormData((prev) => ({
+            ...prev,
+            images: [...prev.images, ...newPreviews],
+        }));
     };
 
-    const removeImage = (index) => {
-        setImagePreview(prev => prev.filter((_, i) => i !== index));
+    const removeImage = (index: number) => {
+        setImagePreview((prev) => prev.filter((_, i) => i !== index));
+        setFormData((prev) => ({
+            ...prev,
+            images: prev.images.filter((_, i) => i !== index),
+        }));
     };
 
-    const handleSubmit = () => {
-        console.log('Product Data:', formData);
-        // Handle form submission
+    const handleSubmit = async () => {
+        setErrors([]);
+        setSuccessMessage(null);
+
+        const clientErrors: string[] = [];
+
+        if (!formData.name.trim()) clientErrors.push('Name is required.');
+        if (!formData.description.trim()) clientErrors.push('Description is required.');
+        if (!formData.category.trim()) clientErrors.push('Category is required.');
+        if (!formData.sku.trim()) clientErrors.push('SKU is required.');
+
+        const price = Number(formData.price);
+        if (!formData.price || Number.isNaN(price) || price <= 0) {
+            clientErrors.push('Price must be a positive number.');
+        }
+
+        const stock = Number(formData.stock);
+        if (formData.stock === '' || Number.isNaN(stock) || stock < 0) {
+            clientErrors.push('Stock must be a non-negative number.');
+        }
+
+        if (formData.images.length === 0) {
+            clientErrors.push('At least one product image is required.');
+        }
+
+        const compareAtPrice = formData.compareAtPrice.trim() !== ''
+            ? Number(formData.compareAtPrice)
+            : undefined;
+
+        if (
+            compareAtPrice !== undefined &&
+            (!Number.isFinite(compareAtPrice) || compareAtPrice <= price)
+        ) {
+            clientErrors.push('Compare at price must be a valid number greater than the selling price.');
+        }
+
+        if (clientErrors.length > 0) {
+            setErrors(clientErrors);
+            return;
+        }
+
+        const specsEntries = formData.specifications
+            .filter((spec) => spec.key.trim() && spec.value.trim())
+            .map<[string, string]>((spec) => [spec.key.trim(), spec.value.trim()]);
+
+        const specifications =
+            specsEntries.length > 0 ? Object.fromEntries(specsEntries) : undefined;
+
+        const payload: ProductInput = {
+            name: formData.name.trim(),
+            description: formData.description.trim(),
+            price,
+            compareAtPrice,
+            category: formData.category.trim(),
+            brand: formData.brand.trim() || undefined,
+            images: formData.images,
+            stock,
+            sku: formData.sku.trim(),
+            isActive: formData.isActive,
+            isFeatured: formData.isFeatured,
+            specifications,
+            tags: formData.tags.length > 0 ? formData.tags : undefined,
+            addedBy: DEMO_ADMIN_ID,
+        };
+
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch('http://localhost:3000/api/create-product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                const serverErrors: string[] | undefined = data.errors;
+                setErrors(
+                    serverErrors && serverErrors.length
+                        ? serverErrors
+                        : [data.message ?? 'Failed to create product'],
+                );
+                return;
+            }
+
+            setSuccessMessage('Product created successfully.');
+            router.push('/dashboard/products');
+        } catch (error) {
+            setErrors(['Unexpected error while creating product.']);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -115,6 +247,21 @@ export default function CreateProductPage() {
                         Add a new product to your inventory with detailed information
                     </p>
                 </div>
+
+                {errors.length > 0 && (
+                    <div className="mb-6 rounded-md border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
+                        <ul className="list-disc space-y-1 pl-4">
+                            {errors.map((error) => (
+                                <li key={error}>{error}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                {successMessage && (
+                    <div className="mb-6 rounded-md border border-emerald-500/20 bg-emerald-500/5 p-4 text-sm text-emerald-600">
+                        {successMessage}
+                    </div>
+                )}
 
                 <div className="grid gap-6 lg:grid-cols-3">
                     {/* Main Content - Left Side */}
@@ -159,7 +306,10 @@ export default function CreateProductPage() {
                                         Description
                                     </Label>
                                     <Textarea
-                                    
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter the Product Description"
                                     />
                                 </div>
 
@@ -459,10 +609,12 @@ export default function CreateProductPage() {
                         <div className="rounded-lg border border-border bg-card p-6">
                             <div className="space-y-3">
                                 <Button
+                                    type="button"
                                     onClick={handleSubmit}
-                                    className="w-full px-4 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                    disabled={isSubmitting}
+                                    className="w-full px-4 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                                 >
-                                    Create Product
+                                    {isSubmitting ? 'Creating...' : 'Create Product'}
                                 </Button>
                                 <Button
                                     type="button"

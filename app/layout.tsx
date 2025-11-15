@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Momo } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
 import { ThemeProvider } from "@/components/theme-provider";
