@@ -1,0 +1,480 @@
+"use client";
+import dynamic from 'next/dynamic';
+
+import React, { useState } from 'react';
+import { Upload, X, Plus, Minus, Tag, Package } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import 
+    import { Textarea } from '@/components/ui/textarea';
+export default function CreateProductPage() {
+
+    
+
+    const [formData, setFormData] = useState({
+        name: '',
+        slug: '',
+        description: '',
+        price: '',
+        compareAtPrice: '',
+        category: '',
+        brand: '',
+        images: [],
+        stock: '',
+        sku: '',
+        isActive: true,
+        isFeatured: false,
+        specifications: [{ key: '', value: '' }],
+        tags: []
+    });
+
+    const [tagInput, setTagInput] = useState('');
+    const [imagePreview, setImagePreview] = useState([]);
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+
+        // Auto-generate slug from name
+        if (name === 'name') {
+            const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            setFormData(prev => ({ ...prev, slug }));
+        }
+    };
+
+    const handleSpecChange = (index, field, value) => {
+        const newSpecs = [...formData.specifications];
+        newSpecs[index][field] = value;
+        setFormData(prev => ({ ...prev, specifications: newSpecs }));
+    };
+
+    const addSpecification = () => {
+        setFormData(prev => ({
+            ...prev,
+            specifications: [...prev.specifications, { key: '', value: '' }]
+        }));
+    };
+
+    const removeSpecification = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            specifications: prev.specifications.filter((_, i) => i !== index)
+        }));
+    };
+
+    const addTag = () => {
+        if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
+            setFormData(prev => ({
+                ...prev,
+                tags: [...prev.tags, tagInput.trim()]
+            }));
+            setTagInput('');
+        }
+    };
+
+    const removeTag = (tagToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            tags: prev.tags.filter(tag => tag !== tagToRemove)
+        }));
+    };
+
+    const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+        const newPreviews = files.map(file => URL.createObjectURL(file));
+        setImagePreview(prev => [...prev, ...newPreviews]);
+    };
+
+    const removeImage = (index) => {
+        setImagePreview(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = () => {
+        console.log('Product Data:', formData);
+        // Handle form submission
+    };
+
+    return (
+        <div className="min-h-screen bg-background">
+            <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                            <Package className="h-5 w-5 text-primary" />
+                        </div>
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+                            Create Product
+                        </h1>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        Add a new product to your inventory with detailed information
+                    </p>
+                </div>
+
+                <div className="grid gap-6 lg:grid-cols-3">
+                    {/* Main Content - Left Side */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Basic Information */}
+                        <div className="rounded-lg border border-border bg-card p-6">
+                            <h2 className="text-lg font-semibold text-card-foreground mb-4">
+                                Basic Information
+                            </h2>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                        Product Name
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                        placeholder="Enter product name"
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                        Slug
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        name="slug"
+                                        value={formData.slug}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                        placeholder="product-slug"
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                        Description
+                                    </Label>
+                                    <Textarea
+                                    
+                                    />
+                                </div>
+
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <div>
+                                        <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                            Category
+                                        </Label>
+                                        <Input
+                                            type="text"
+                                            name="category"
+                                            value={formData.category}
+                                            onChange={handleInputChange}
+                                            className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                            placeholder="e.g., Electronics"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                            Brand
+                                        </Label>
+                                        <Input
+                                            type="text"
+                                            name="brand"
+                                            value={formData.brand}
+                                            onChange={handleInputChange}
+                                            className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                            placeholder="Brand name"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Pricing & Inventory */}
+                        <div className="rounded-lg border border-border bg-card p-6">
+                            <h2 className="text-lg font-semibold text-card-foreground mb-4">
+                                Pricing & Inventory
+                            </h2>
+
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <div>
+                                    <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                        Price
+                                    </Label>
+                                    <div className="relative">
+                                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                            $
+                                        </span>
+                                        <Input
+                                            type="number"
+                                            name="price"
+                                            value={formData.price}
+                                            onChange={handleInputChange}
+                                            className="w-full rounded-md border border-input bg-background pl-8 pr-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                            placeholder="0.00"
+                                            step="0.01"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                        Compare at Price
+                                    </Label>
+                                    <div className="relative">
+                                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                                            $
+                                        </span>
+                                        <Input
+                                            type="number"
+                                            name="compareAtPrice"
+                                            value={formData.compareAtPrice}
+                                            onChange={handleInputChange}
+                                            className="w-full rounded-md border border-input bg-background pl-8 pr-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                            placeholder="0.00"
+                                            step="0.01"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                        Stock Quantity
+                                    </Label>
+                                    <Input
+                                        type="number"
+                                        name="stock"
+                                        value={formData.stock}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                        placeholder="0"
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label className="block text-sm font-medium text-foreground mb-1.5">
+                                        SKU
+                                    </Label>
+                                    <Input
+                                        type="text"
+                                        name="sku"
+                                        value={formData.sku}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                        placeholder="PROD-001"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Product Images */}
+                        <div className="rounded-lg border border-border bg-card p-6">
+                            <h2 className="text-lg font-semibold text-card-foreground mb-4">
+                                Product Images
+                            </h2>
+
+                            <div className="space-y-4">
+                                <Label className="flex flex-col items-center justify-center w-full h-40 rounded-lg border-2 border-dashed border-input bg-background hover:bg-accent/50 transition-colors cursor-pointer">
+                                    <div className="flex flex-col items-center justify-center gap-2">
+                                        <Upload className="h-8 w-8 text-muted-foreground" />
+                                        <p className="text-sm text-muted-foreground">
+                                            Click to upload or drag and drop
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            PNG, JPG or WEBP (max. 5MB)
+                                        </p>
+                                    </div>
+                                    <Input
+                                        type="file"
+                                        className="hidden"
+                                        multiple
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                    />
+                                </Label>
+
+                                {imagePreview.length > 0 && (
+                                    <div className="grid grid-cols-4 gap-4">
+                                        {imagePreview.map((preview, index) => (
+                                            <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border border-border">
+                                                <img
+                                                    src={preview}
+                                                    alt={`Preview ${index + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => removeImage(index)}
+                                                    className="absolute top-2 right-2 p-1 rounded-md bg-destructive/90 text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Specifications */}
+                        <div className="rounded-lg border border-border bg-card p-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-semibold text-card-foreground">
+                                    Specifications
+                                </h2>
+                                <Button
+                                    type="button"
+                                    onClick={addSpecification}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                                >
+                                    <Plus className="h-4 w-4" />
+                                    Add
+                                </Button>
+                            </div>
+
+                            <div className="space-y-3">
+                                {formData.specifications.map((spec, index) => (
+                                    <div key={index} className="flex gap-3">
+                                        <Input
+                                            type="text"
+                                            value={spec.key}
+                                            onChange={(e) => handleSpecChange(index, 'key', e.target.value)}
+                                            className="flex-1 rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                            placeholder="Property"
+                                        />
+                                        <Input
+                                            type="text"
+                                            value={spec.value}
+                                            onChange={(e) => handleSpecChange(index, 'value', e.target.value)}
+                                            className="flex-1 rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                            placeholder="Value"
+                                        />
+                                        <Button
+                                            type="button"
+                                            onClick={() => removeSpecification(index)}
+                                            className="p-2.5 rounded-md border border-input bg-background text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-colors"
+                                        >
+                                            <Minus className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Sidebar - Right Side */}
+                    <div className="space-y-6">
+                        {/* Status */}
+                        <div className="rounded-lg border border-border bg-card p-6">
+                            <h2 className="text-lg font-semibold text-card-foreground mb-4">
+                                Status
+                            </h2>
+
+                            <div className="space-y-4">
+                                <Label className="flex items-center justify-between cursor-pointer group">
+                                    <span className="text-sm font-medium text-foreground">Active</span>
+                                    <div className="relative">
+                                        <Input
+                                            type="checkbox"
+                                            name="isActive"
+                                            checked={formData.isActive}
+                                            onChange={handleInputChange}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-input rounded-full peer peer-focus:ring-2 peer-focus:ring-ring/20 peer-checked:bg-primary transition-colors"></div>
+                                        <div className="absolute left-1 top-1 bg-background w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
+                                    </div>
+                                </Label>
+
+                                <Label className="flex items-center justify-between cursor-pointer group">
+                                    <span className="text-sm font-medium text-foreground">Featured</span>
+                                    <div className="relative">
+                                        <Input
+                                            type="checkbox"
+                                            name="isFeatured"
+                                            checked={formData.isFeatured}
+                                            onChange={handleInputChange}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-input rounded-full peer peer-focus:ring-2 peer-focus:ring-ring/20 peer-checked:bg-primary transition-colors"></div>
+                                        <div className="absolute left-1 top-1 bg-background w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
+                                    </div>
+                                </Label>
+                            </div>
+                        </div>
+
+                        {/* Tags */}
+                        <div className="rounded-lg border border-border bg-card p-6">
+                            <h2 className="text-lg font-semibold text-card-foreground mb-4">
+                                Tags
+                            </h2>
+
+                            <div className="space-y-3">
+                                <div className="flex gap-2">
+                                    <Input
+                                        type="text"
+                                        value={tagInput}
+                                        onChange={(e) => setTagInput(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                                        className="flex-1 rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                        placeholder="Add tag"
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={addTag}
+                                        className="px-4 py-2.5 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                                    >
+                                        <Tag className="h-4 w-4" />
+                                    </Button>
+                                </div>
+
+                                {formData.tags.length > 0 && (
+                                    <div className="flex flex-wrap gap-2">
+                                        {formData.tags.map((tag, index) => (
+                                            <span
+                                                key={index}
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-secondary text-secondary-foreground text-sm"
+                                            >
+                                                {tag}
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => removeTag(tag)}
+                                                    className="hover:text-destructive transition-colors"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </Button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="rounded-lg border border-border bg-card p-6">
+                            <div className="space-y-3">
+                                <Button
+                                    onClick={handleSubmit}
+                                    className="w-full px-4 py-2.5 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                >
+                                    Create Product
+                                </Button>
+                                <Button
+                                    type="button"
+                                    className="w-full px-4 py-2.5 rounded-md border border-input bg-background text-foreground font-medium hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors"
+                                >
+                                    Save as Draft
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

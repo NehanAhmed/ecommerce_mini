@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import data from "../data.json"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -30,6 +31,7 @@ import {
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { MetricCard } from '../../_components/MetricCard'; // Adjust path if necessary
 import { cn } from '@/lib/utils'; // For conditional classNames
+import { DataTable } from '@/components/data-table';
 
 // Dummy Data
 const initialProducts = [
@@ -265,101 +267,15 @@ const ProductsDashboard = () => {
                             </Button>
                         </Card>
                     ) : (
-                        <Card className="border border-border shadow-sm rounded-xl overflow-hidden bg-card">
-                            {viewMode === 'table' ? (
-                                <div className="overflow-x-auto">
-                                    <Table className="min-w-full divide-y divide-border">
-                                        <TableHeader className="bg-muted/50">
-                                            {/* Remove hover effect from header */}
-                                            <TableRow className="hover:bg-muted/50">
-                                                <TableHead className="w-[50px]">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="rounded border-border checked:bg-primary checked:border-primary text-primary focus:ring-offset-background focus:ring-primary"
-                                                        checked={isAllSelected}
-                                                        onChange={handleSelectAll}
-                                                        ref={input => {
-                                                            if (input) {
-                                                                input.indeterminate = isIndeterminate;
-                                                            }
-                                                        }}
-                                                    />
-                                                </TableHead>
-                                                <TableHead className="font-semibold text-foreground text-sm">Product</TableHead>
-                                                <TableHead className="font-semibold text-foreground text-sm">SKU</TableHead>
-                                                <TableHead className="font-semibold text-foreground text-sm">Category</TableHead>
-                                                <TableHead className="font-semibold text-foreground text-sm">Price</TableHead>
-                                                <TableHead className="font-semibold text-foreground text-sm">Stock</TableHead>
-                                                <TableHead className="font-semibold text-foreground text-sm">Status</TableHead>
-                                                <TableHead className="font-semibold text-foreground text-sm">Sales</TableHead>
-                                                <TableHead className="text-right font-semibold text-foreground text-sm">Actions</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody className="divide-y divide-border">
-                                            {filteredProducts.map((product) => (
-                                                <TableRow key={product.id} className="hover:bg-muted/30 transition-colors">
-                                                    <TableCell>
-                                                        <input
-                                                            type="checkbox"
-                                                            className="rounded border-border checked:bg-primary checked:border-primary text-primary focus:ring-offset-background focus:ring-primary"
-                                                            checked={selectedProductIds.has(product.id)}
-                                                            onChange={(e) => handleSelectProduct(product.id, e)}
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell className="py-3">
-                                                        <div className="flex items-center gap-3">
-                                                            <img
-                                                                src={product.image}
-                                                                alt={product.name}
-                                                                className="w-14 h-14 rounded-lg object-cover border border-border shrink-0"
-                                                            />
-                                                            <div>
-                                                                <p className="font-medium text-foreground text-base">{product.name}</p>
-                                                                <p className="text-xs text-muted-foreground mt-0.5">Updated {product.lastUpdated}</p>
-                                                            </div>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="font-mono text-sm text-muted-foreground">{product.sku}</TableCell>
-                                                    <TableCell>
-                                                        <Badge variant="outline" className="text-xs px-2 py-0.5 border-border bg-card-foreground/5 text-foreground">
-                                                            {product.category}
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="font-semibold text-foreground text-base">${product.price.toFixed(2)}</TableCell>
-                                                    <TableCell>{getStockStatus(product.stock)}</TableCell>
-                                                    <TableCell>{getStatusBadge(product.status)}</TableCell>
-                                                    <TableCell className="text-foreground font-medium text-base">{product.sales}</TableCell>
-                                                    <TableCell className="text-right">
-                                                        <DropdownMenu>
-                                                            <DropdownMenuTrigger asChild>
-                                                                <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:bg-muted hover:text-foreground">
-                                                                    <MoreVertical className="h-4 w-4" />
-                                                                </Button>
-                                                            </DropdownMenuTrigger>
-                                                            <DropdownMenuContent align="end" className="w-52 rounded-lg p-1">
-                                                                <DropdownMenuItem className="gap-2 cursor-pointer flex items-center px-3 py-2 rounded-md text-sm text-foreground hover:bg-muted focus:bg-muted">
-                                                                    <Eye className="w-4 h-4" />
-                                                                    View Details
-                                                                </DropdownMenuItem>
-                                                                <DropdownMenuItem className="gap-2 cursor-pointer flex items-center px-3 py-2 rounded-md text-sm text-foreground hover:bg-muted focus:bg-muted">
-                                                                    <Edit2 className="w-4 h-4" />
-                                                                    Edit Product
-                                                                </DropdownMenuItem>
-                                                                <DropdownMenuSeparator className="bg-border" />
-                                                                <DropdownMenuItem className="gap-2 cursor-pointer flex items-center px-3 py-2 rounded-md text-sm text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive">
-                                                                    <Trash2 className="w-4 h-4" />
-                                                                    Delete Product
-                                                                </DropdownMenuItem>
-                                                            </DropdownMenuContent>
-                                                        </DropdownMenu>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </div>
-                            ) : (
-                                // Grid View Implementation (basic placeholder for now)
+                        <>
+                        { viewMode === 'table' ? (
+                            <div className="overflow-x-auto">
+                                <DataTable data={data} />
+                            </div>
+                        ) : (
+                            // Grid View Implementation (basic placeholder for now)
+                            <Card className="border border-border shadow-sm rounded-xl overflow-hidden bg-card">
+
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
                                     {filteredProducts.map((product) => (
                                         <Card key={product.id} className="p-4 flex flex-col items-center text-center gap-3 border border-border shadow-sm hover:shadow-md transition-shadow rounded-lg">
@@ -382,26 +298,13 @@ const ProductsDashboard = () => {
                                         </Card>
                                     ))}
                                 </div>
-                            )}
+                            </Card>
 
-                            {/* Pagination */}
-                            {filteredProducts.length > 0 && (
-                                <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-muted/20">
-                                    <p className="text-sm text-muted-foreground">
-                                        Showing <span className="font-semibold text-foreground">{filteredProducts.length}</span> of{' '}
-                                        <span className="font-semibold text-foreground">{initialProducts.length}</span> products
-                                    </p>
-                                    <div className="flex gap-2">
-                                        <Button variant="outline" size="sm" disabled>
-                                            Previous
-                                        </Button>
-                                        <Button variant="outline" size="sm">
-                                            Next
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
-                        </Card>
+                        )}
+
+                    {/* Pagination */}
+                            
+                    </>
                     )}
                 </>
             ) : (

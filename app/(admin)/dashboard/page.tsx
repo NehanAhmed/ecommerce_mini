@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/sidebar"
 
 import data from "./data.json"
+import { IProduct } from "@/database"
 
 export default function Page() {
-  const orders = data as Order[]
 
   return (
     <div className="flex flex-1 flex-col">
@@ -23,7 +23,7 @@ export default function Page() {
           <div className="px-4 lg:px-6">
             <ChartAreaInteractive />
           </div>
-          <DataTable columns={columns} data={orders} />
+          <DataTable data={data} />
         </div>
       </div>
     </div>
