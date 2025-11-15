@@ -297,10 +297,11 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
 export function DataTable({
   data: initialData,
 }: {
-  data: z.infer<typeof schema>[]
+  data: z.infer<typeof schema>[] | any
 }) {
-  // Ensure data has required fields with defaults
-  const sanitizedData = (initialData || []).map((item) => ({
+  // Ensure data is an array and has required fields with defaults
+  const dataArray = Array.isArray(initialData) ? initialData : []
+  const sanitizedData = (dataArray || []).map((item) => ({
     name: item.name || "Unknown Product",
     slug: item.slug || "",
     price: item.price ?? 0,

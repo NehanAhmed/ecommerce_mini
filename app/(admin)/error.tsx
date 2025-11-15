@@ -1,6 +1,7 @@
 'use client'
 import { AlertCircle, Home, RefreshCcw, ShoppingBag } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import React from 'react';
 
 export default function Error() {
   const [isRefreshing, setIsRefreshing] = React.useState(false);

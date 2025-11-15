@@ -8,10 +8,14 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     const userData = await getCurrentUser()
 
     const user = userData ? {
-        name: userData[0] || "Guest User",
-        email: userData[1] || "guest@example.com",
+        username: userData.firstName || "Guest User",
+        email: userData.email || "guest@example.com",
+        avatar: userData.imageUrl || "/avatars/shadcn.jpg",
+    } : {
+        username: "Guest User",
+        email: "guest@example.com",
         avatar: "/avatars/shadcn.jpg",
-    } : undefined
+    }
     return (
         <main className='w-full min-h-screen'>
 
