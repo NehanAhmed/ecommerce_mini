@@ -1,17 +1,44 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Shield, Truck, RotateCcw, Star, ChevronRight, Zap, Cpu, Headphones } from 'lucide-react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { ShoppingCart, Shield, Truck, RotateCcw, Star, ChevronRight, Zap, Cpu, ArrowRight, Sparkles } from 'lucide-react';
+
+const AnimatedSection = ({ children, className = "" }) => {
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const FloatingCard = ({ children, delay = 0 }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -8, transition: { duration: 0.3 } }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 export default function EcommerceLanding() {
-  const [scrollY, setScrollY] = useState(0);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const { scrollYProgress } = useScroll();
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,256 +60,428 @@ export default function EcommerceLanding() {
     { name: 'Emma Thompson', role: 'Designer', quote: 'Love the quality and attention to detail. Every product feels premium and well-crafted.', rating: 5 },
   ];
 
+  const features = [
+    { icon: <Truck className="w-6 h-6" />, title: 'Free Shipping', desc: 'On all orders over $100' },
+    { icon: <Shield className="w-6 h-6" />, title: '2-Year Warranty', desc: 'Extended protection plan' },
+    { icon: <RotateCcw className="w-6 h-6" />, title: 'Easy Returns', desc: '30-day return policy' },
+    { icon: <Zap className="w-6 h-6" />, title: 'Fast Delivery', desc: '2-3 business days' },
+  ];
+
   return (
-    <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+    <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-amber-500/10" />
-          <div 
-            className="absolute inset-0"
+      <section className="relative min-h-screen flex items-center justify-center">
+        <motion.div 
+          className="absolute inset-0 overflow-hidden"
+          style={{ y: backgroundY }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 dark:from-blue-950/20 dark:via-neutral-950 dark:to-purple-950/20" />
+          <motion.div 
+            className="absolute inset-0 opacity-30"
+            animate={{
+              backgroundPosition: ['0% 0%', '100% 100%'],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              repeatType: 'reverse',
+              ease: 'linear'
+            }}
             style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)',
-              backgroundSize: '48px 48px',
-              transform: `translateY(${scrollY * 0.3}px)`
+              backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.15) 1px, transparent 0)',
+              backgroundSize: '64px 64px',
             }}
           />
-        </div>
+        </motion.div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-          <div className="animate-fade-in-up space-y-8">
-            <div className="inline-block px-4 py-2 bg-blue-500/20 rounded-full border border-blue-500/30 backdrop-blur-sm mb-4">
-              <span className="text-blue-300 text-sm font-medium">Premium Electronics • Curated for Excellence</span>
-            </div>
+        <motion.div 
+          className="relative z-10 max-w-7xl mx-auto px-6 text-center"
+          style={{ opacity }}
+        >
+          <motion.div 
+            className="space-y-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-950/30 rounded-full border border-blue-200 dark:border-blue-800/50 backdrop-blur-sm"
+            >
+              <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span className="text-blue-700 dark:text-blue-300 text-sm font-medium">Premium Electronics • Curated Excellence</span>
+            </motion.div>
             
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
-              <span className="bg-gradient-to-r from-white via-blue-100 to-amber-100 bg-clip-text text-transparent">
+            <motion.h1 
+              className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-none"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <span className="block bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 dark:from-white dark:via-neutral-100 dark:to-neutral-300 bg-clip-text text-transparent">
                 Elevate Your
               </span>
-              <br />
-              <span className="bg-gradient-to-r from-amber-200 via-blue-200 to-white bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Digital Life
               </span>
-            </h1>
+            </motion.h1>
             
-            <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            <motion.p 
+              className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
               Discover premium electronics that blend cutting-edge technology with timeless design. 
               Curated for those who demand excellence.
-            </p>
+            </motion.p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-              <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
-                Shop Collection
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-300 hover:scale-105">
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+            >
+              <motion.button 
+                className="group relative px-8 py-4 bg-blue-600 dark:bg-blue-500 text-white rounded-full font-semibold text-base shadow-lg overflow-hidden"
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(59, 130, 246, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Shop Collection
+                  <motion.div
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </motion.div>
+                </span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-600"
+                  initial={{ x: '100%' }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.button>
+              <motion.button 
+                className="px-8 py-4 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-full font-semibold text-base"
+                whileHover={{ scale: 1.05, borderColor: 'rgb(59, 130, 246)' }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
                 Explore Deals
-              </button>
-            </div>
-          </div>
-        </div>
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        </motion.div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-            <div className="w-1 h-3 bg-white/50 rounded-full" />
+        <motion.div 
+          className="absolute bottom-12 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="w-6 h-10 border-2 border-neutral-400 dark:border-neutral-600 rounded-full flex items-start justify-center p-2">
+            <motion.div 
+              className="w-1 h-3 bg-neutral-600 dark:bg-neutral-400 rounded-full"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            />
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: <Truck className="w-8 h-8" />, title: 'Free Shipping', desc: 'On all orders over $100' },
-              { icon: <Shield className="w-8 h-8" />, title: '2-Year Warranty', desc: 'Extended protection plan' },
-              { icon: <RotateCcw className="w-8 h-8" />, title: 'Easy Returns', desc: '30-day return policy' },
-              { icon: <Zap className="w-8 h-8" />, title: 'Fast Delivery', desc: '2-3 business days' },
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="group p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl border border-slate-700/50 backdrop-blur-sm hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                <p className="text-slate-400">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
+      <section className="py-32 px-6 relative bg-neutral-50 dark:bg-neutral-900/30">
+        <div className="max-w-7xl mx-auto">
+          <AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {features.map((feature, i) => (
+                <FloatingCard key={i} delay={i * 0.1}>
+                  <motion.div
+                    className="group p-8 bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-sm hover:shadow-xl transition-shadow duration-300"
+                    whileHover={{ 
+                      borderColor: 'rgb(59, 130, 246)',
+                      boxShadow: '0 20px 40px rgba(59, 130, 246, 0.1)'
+                    }}
+                  >
+                    <motion.div 
+                      className="w-14 h-14 bg-blue-50 dark:bg-blue-950/30 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 mb-6"
+                      whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {feature.icon}
+                    </motion.div>
+                    <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-white">{feature.title}</h3>
+                    <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">{feature.desc}</p>
+                  </motion.div>
+                </FloatingCard>
+              ))}
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-24 px-6 bg-slate-900/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Products</h2>
-            <p className="text-slate-400 text-lg">Handpicked essentials for the modern lifestyle</p>
-          </div>
+      <section className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <AnimatedSection className="text-center mb-20">
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold mb-4 text-neutral-900 dark:text-white"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              Featured Products
+            </motion.h2>
+            <motion.p 
+              className="text-neutral-600 dark:text-neutral-400 text-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              Handpicked essentials for the modern lifestyle
+            </motion.p>
+          </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.map((product, i) => (
-              <div
-                key={i}
-                className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 rounded-2xl overflow-hidden border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20"
-              >
-                <div className="aspect-square bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform duration-500">
-                  {product.image}
-                </div>
-                <div className="p-6">
-                  <h3 className="font-bold text-lg mb-2">{product.name}</h3>
-                  <p className="text-slate-400 text-sm mb-4">{product.spec}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-blue-400">{product.price}</span>
-                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-1">
-                      <ShoppingCart className="w-4 h-4" />
-                      Add
-                    </button>
+              <FloatingCard key={i} delay={i * 0.15}>
+                <motion.div
+                  className="group relative bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden border border-neutral-200 dark:border-neutral-800"
+                  whileHover={{ 
+                    borderColor: 'rgb(59, 130, 246)',
+                    boxShadow: '0 20px 40px rgba(59, 130, 246, 0.15)'
+                  }}
+                >
+                  <motion.div 
+                    className="aspect-square bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-800 dark:to-neutral-900 flex items-center justify-center text-7xl relative overflow-hidden"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                    <span className="relative z-10">{product.image}</span>
+                  </motion.div>
+                  <div className="p-6">
+                    <h3 className="font-semibold text-lg mb-2 text-neutral-900 dark:text-white">{product.name}</h3>
+                    <p className="text-neutral-500 dark:text-neutral-500 text-sm mb-4">{product.spec}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">{product.price}</span>
+                      <motion.button 
+                        className="px-5 py-2.5 bg-blue-600 dark:bg-blue-500 text-white rounded-full text-sm font-semibold flex items-center gap-2 shadow-sm"
+                        whileHover={{ scale: 1.05, boxShadow: '0 10px 20px rgba(59, 130, 246, 0.3)' }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <ShoppingCart className="w-4 h-4" />
+                        Add
+                      </motion.button>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </FloatingCard>
             ))}
           </div>
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Loved by Customers</h2>
-            <p className="text-slate-400 text-lg">Join thousands of satisfied tech enthusiasts</p>
-          </div>
+      <section className="py-32 px-6 bg-neutral-50 dark:bg-neutral-900/30">
+        <div className="max-w-5xl mx-auto">
+          <AnimatedSection className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-neutral-900 dark:text-white">Loved by Customers</h2>
+            <p className="text-neutral-600 dark:text-neutral-400 text-lg">Join thousands of satisfied tech enthusiasts</p>
+          </AnimatedSection>
 
-          <div className="relative">
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-3xl p-12 border border-slate-700/50 backdrop-blur-sm">
-              <div className="flex justify-center mb-6">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-6 h-6 fill-amber-400 text-amber-400" />
+          <AnimatedSection>
+            <div className="relative">
+              <motion.div 
+                className="bg-white dark:bg-neutral-900 rounded-3xl p-12 md:p-16 border border-neutral-200 dark:border-neutral-800 shadow-lg"
+                key={activeTestimonial}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="flex justify-center mb-8">
+                  {[...Array(5)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.1, duration: 0.3 }}
+                    >
+                      <Star className="w-6 h-6 fill-amber-400 text-amber-400" />
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <p className="text-xl md:text-2xl text-center mb-10 leading-relaxed text-neutral-700 dark:text-neutral-300 font-light">
+                  "{testimonials[activeTestimonial].quote}"
+                </p>
+                
+                <div className="text-center">
+                  <motion.div 
+                    className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-white shadow-lg"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  >
+                    {testimonials[activeTestimonial].name.charAt(0)}
+                  </motion.div>
+                  <p className="font-semibold text-lg text-neutral-900 dark:text-white">{testimonials[activeTestimonial].name}</p>
+                  <p className="text-neutral-500 dark:text-neutral-500">{testimonials[activeTestimonial].role}</p>
+                </div>
+              </motion.div>
+
+              <div className="flex justify-center gap-3 mt-10">
+                {testimonials.map((_, i) => (
+                  <motion.button
+                    key={i}
+                    onClick={() => setActiveTestimonial(i)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      i === activeTestimonial 
+                        ? 'w-10 bg-blue-600 dark:bg-blue-500' 
+                        : 'w-2 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400 dark:hover:bg-neutral-600'
+                    }`}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                  />
                 ))}
               </div>
-              
-              <p className="text-2xl text-center mb-8 leading-relaxed text-slate-200">
-                "{testimonials[activeTestimonial].quote}"
-              </p>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">
-                  {testimonials[activeTestimonial].name.charAt(0)}
-                </div>
-                <p className="font-bold text-lg">{testimonials[activeTestimonial].name}</p>
-                <p className="text-slate-400">{testimonials[activeTestimonial].role}</p>
-              </div>
             </div>
-
-            <div className="flex justify-center gap-2 mt-8">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveTestimonial(i)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i === activeTestimonial ? 'w-8 bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-500 rounded-3xl p-12 md:p-16 text-center">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20" />
-            
-            <div className="relative z-10">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">Stay Updated</h2>
-              <p className="text-blue-100 text-xl mb-8 max-w-2xl mx-auto">
-                Subscribe to our newsletter for exclusive deals, new product launches, and tech insights.
-              </p>
+      <section className="py-32 px-6">
+        <div className="max-w-5xl mx-auto">
+          <AnimatedSection>
+            <motion.div 
+              className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 md:p-20 text-center"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="absolute inset-0 opacity-20"
+                animate={{
+                  backgroundPosition: ['0% 0%', '100% 100%'],
+                }}
+                transition={{
+                  duration: 15,
+                  repeat: Infinity,
+                  repeatType: 'reverse',
+                  ease: 'linear'
+                }}
+                style={{
+                  backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.3) 1px, transparent 0)',
+                  backgroundSize: '48px 48px',
+                }}
+              />
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-xl mx-auto">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-white"
-                />
-                <button className="px-8 py-4 bg-white text-blue-600 rounded-full font-bold hover:bg-blue-50 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                  Subscribe
-                </button>
+              <div className="relative z-10">
+                <motion.h2 
+                  className="text-4xl md:text-5xl font-bold mb-4 text-white"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
+                  Stay Updated
+                </motion.h2>
+                <motion.p 
+                  className="text-blue-50 text-lg md:text-xl mb-10 max-w-2xl mx-auto"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  Subscribe to our newsletter for exclusive deals, new product launches, and tech insights.
+                </motion.p>
+                
+                <motion.div 
+                  className="flex flex-col sm:flex-row gap-4 justify-center max-w-xl mx-auto"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="flex-1 px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 placeholder-blue-100 focus:outline-none focus:ring-2 focus:ring-white/50 text-white transition-all duration-300"
+                  />
+                  <motion.button 
+                    className="px-8 py-4 bg-white text-blue-600 rounded-full font-semibold flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(255, 255, 255, 0.3)' }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Subscribe
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.button>
+                </motion.div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <footer className="border-t border-neutral-200 dark:border-neutral-800 py-16 px-6 bg-neutral-50 dark:bg-neutral-900/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Cpu className="w-8 h-8 text-blue-500" />
-                <span className="text-xl font-bold">TechLux</span>
+              <motion.div 
+                className="flex items-center gap-2 mb-4"
+                whileHover={{ scale: 1.05 }}
+              >
+                <Cpu className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                <span className="text-xl font-bold text-neutral-900 dark:text-white">TechLux</span>
+              </motion.div>
+              <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">
+                Premium electronics for the modern lifestyle.
+              </p>
+            </div>
+            
+            {[
+              { title: 'Shop', links: ['New Arrivals', 'Best Sellers', 'Deals'] },
+              { title: 'Support', links: ['Contact Us', 'Shipping Info', 'Returns'] },
+              { title: 'Company', links: ['About Us', 'Careers', 'Privacy Policy'] }
+            ].map((section, i) => (
+              <div key={i}>
+                <h4 className="font-semibold mb-4 text-neutral-900 dark:text-white">{section.title}</h4>
+                <ul className="space-y-3">
+                  {section.links.map((link, j) => (
+                    <li key={j}>
+                      <motion.a 
+                        href="#" 
+                        className="text-neutral-600 dark:text-neutral-400 text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors inline-flex items-center gap-2 group"
+                        whileHover={{ x: 5 }}
+                      >
+                        <span>{link}</span>
+                        <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </motion.a>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <p className="text-slate-400 text-sm">Premium electronics for the modern lifestyle.</p>
-            </div>
-            
-            <div>
-              <h4 className="font-bold mb-4">Shop</h4>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">New Arrivals</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Best Sellers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Deals</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-bold mb-4">Support</h4>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Shipping Info</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Returns</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-slate-400 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              </ul>
-            </div>
+            ))}
           </div>
           
-          <div className="pt-8 border-t border-slate-800 text-center text-slate-400 text-sm">
-            <p>© 2024 TechLux. All rights reserved. Crafted with excellence.</p>
+          <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800 text-center">
+            <p className="text-neutral-500 dark:text-neutral-500 text-sm">
+              © 2024 TechLux. All rights reserved. Crafted with excellence.
+            </p>
           </div>
         </div>
       </footer>
-
-      <style>{`
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-fade-in-up {
-          animation: fade-in-up 1s ease-out;
-        }
-      `}</style>
     </div>
   );
 }
