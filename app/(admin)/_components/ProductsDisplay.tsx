@@ -30,7 +30,7 @@ function ProductsDisplay({ data }: ProductsDisplayProps) {
         const response = await fetch("http://localhost:3000/api/list-products")
         if (!response.ok) throw new Error("Failed to fetch products")
         const result = await response.json()
-        
+
         // Ensure result is an array
         if (Array.isArray(result)) {
           setProducts(result)
@@ -111,7 +111,7 @@ function ProductsDisplay({ data }: ProductsDisplayProps) {
   }
 
   return (
-    <main>
+    <main className=''>
       <DataTable data={products} />
     </main>
   )

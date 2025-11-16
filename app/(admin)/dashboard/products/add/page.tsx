@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Upload, X, Plus, Minus, Tag, Package } from 'lucide-react';
+import { Upload, X, Plus, Minus, Tag, Package, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { ProductInput } from '@/types/product';
+import Link from 'next/link';
 
 interface SpecificationField {
     key: string;
@@ -234,6 +235,15 @@ export default function CreateProductPage() {
         <div className="min-h-screen bg-background">
             <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
                 {/* Header */}
+                <div className='absolute left-30 rounded-full '>
+                    <Link href='/dashboard/products'>
+                    
+                    <Button variant={'link'}>
+
+                    <ArrowLeft />
+                    </Button>
+                    </Link>
+                </div>
                 <div className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">

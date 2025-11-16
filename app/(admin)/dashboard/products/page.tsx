@@ -10,14 +10,24 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import ProductsDisplay from '../../_components/ProductsDisplay';
+import { MetricCard } from '../../_components/MetricCard';
+import Link from 'next/link';
 
 
 const ProductsDashboard = async () => {
-
-    const response = await fetch("http://localhost:3000/api/list-products")
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+    const response = await fetch(`${BASE_URL}/api/list-products`)
     if (!response) throw new Error("Error fetching Products")
 
-    const products = await response.json()
+    const data = await response.json()
+    // Extract the products array from the response object
+    const products = data.products || []
+
+    // Calculate metrics from products data
+    const totalProducts = products.length
+    const activeProducts = products.filter((p: any) => p.stock > 0).length
+    const lowStockProducts = products.filter((p: any) => p.stock > 0 && p.stock <= 10).length
+    const outOfStockProducts = products.filter((p: any) => p.stock === 0).length
 
 
     return (
@@ -37,16 +47,18 @@ const ProductsDashboard = async () => {
                             <Download className="w-4 h-4" />
                             Export
                         </Button>
-                        <Button className="gap-2">
-                            <Plus className="w-4 h-4" />
-                            Add Product
-                        </Button>
+                        <Link href='products/add'>
+                            <Button className="gap-2">
+                                <Plus className="w-4 h-4" />
+                                Add Product
+                            </Button>
+                        </Link>
                     </div>
                 </div>
 
                 {/* Stats Cards */}
                 <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {/* <MetricCard
+                    <MetricCard
                         title="Total Products"
                         value={totalProducts}
                         icon={<Package />}
@@ -73,7 +85,7 @@ const ProductsDashboard = async () => {
                         icon={<XCircle />}
                         iconBgClass="bg-destructive/10"
                         iconColorClass="text-destructive"
-                    /> */}
+                    />
                 </section>
             </header>
 
@@ -119,7 +131,7 @@ const ProductsDashboard = async () => {
             </section>
 
             {/* Main Content Area */}
-            <ProductsDisplay data={products}/>
+            <ProductsDisplay data={products} />
         </div>
     );
 };

@@ -5,7 +5,7 @@ import React from 'react'
 
 const Header = () => {
     return (
-        <nav className='w-full flex justify-around items-center py-8 bg-zinc-50'>
+        <nav className='w-full flex justify-around items-center py-8 bg-linear-to-b from-slate-950 via-slate-900 to-slate-950 text-'>
             <div className='flex  gap-2 items-center justify-center'>
                 <h1 className='text-4xl font-semibold'>Shoppit</h1>
                 <div className='px-10 flex gap-2 items-center justify-center'>
