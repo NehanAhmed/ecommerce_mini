@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   closestCenter,
   DndContext,
@@ -176,7 +177,15 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "name",
     header: "Product Name",
     cell: ({ row }) => {
-      return <TableCellViewer item={row.original} />
+      const slug = row.original.slug
+      return (
+        <Link 
+          href={`/dashboard/products/${slug}`}
+          className="text-primary hover:underline font-medium"
+        >
+          {row.original.name}
+        </Link>
+      )
     },
     enableHiding: false,
   },

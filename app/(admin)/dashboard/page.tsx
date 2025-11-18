@@ -13,8 +13,14 @@ import {
 import data from "./data.json"
 import { IProduct } from "@/database"
 
-export default function Page() {
+export default async function Page() {
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+  const response = await fetch(`${BASE_URL}/api/list-products`)
 
+  if (!response) throw new Error("Error fetching Products")
+
+  const data = await response.json()
+  const products = await data.products
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
@@ -23,7 +29,7 @@ export default function Page() {
           <div className="px-4 lg:px-6">
             <ChartAreaInteractive />
           </div>
-          <DataTable data={data} />
+          <DataTable data={products} />
         </div>
       </div>
     </div>
