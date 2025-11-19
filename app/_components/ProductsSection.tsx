@@ -145,10 +145,10 @@ const ProductsPage = ({ products: initialData }: { products: IProduct }) => {
             </div>
 
             {/* Products Grid */}
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
+            <div className="relative z-10 max-w-8xl mx-auto px-4 sm:px-6 lg:px-30 py-8 sm:py-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 lg:gap-10">
                     {data.map((product) => (
-                        <div key={product.sku} className="flex justify-center">
+                        <div key={product.sku} className="flex justify-center w-md">
                             <ProductCard product={product}/>
                         </div>
                     ))}

@@ -10,6 +10,7 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs'
+import { CartProvider } from "@/context/CartContext";
 const poppins = ({
   variable: "--font-poppins",
   subsets: ["latin"],
@@ -42,7 +43,9 @@ export default function RootLayout({
 
           >
 
-            {children}
+            <CartProvider>
+              {children}
+            </CartProvider>
           </ThemeProvider>
         </body>
       </html>

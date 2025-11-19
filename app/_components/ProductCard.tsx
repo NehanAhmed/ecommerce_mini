@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 import { Heart, ShoppingCart, Star, Eye, Share2, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import AddToCartButton from './AddToCartButton';
 
 interface ProductCardProps {
   product: {
+    _id:string
     name: string;
     slug: string;
     description: string;
@@ -63,7 +66,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
 
   return (
     <Card
-      className="w-full max-w-sm mx-auto overflow-hidden transition-all duration-500 hover:shadow-2xl border-0 bg-card rounded-3xl relative"
+      className="w-full max-w-md mx-auto overflow-hidden transition-all duration-500 hover:shadow-2xl border-0 bg-card rounded-3xl relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
@@ -102,8 +105,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
                 >
                   <div
                     className={`h-2 rounded-full transition-all duration-300 ${currentImageIndex === index
-                        ? 'bg-white w-6'
-                        : 'bg-white/50 hover:bg-white/75 w-2'
+                      ? 'bg-white w-6'
+                      : 'bg-white/50 hover:bg-white/75 w-2'
                       }`}
                   />
                 </button>
@@ -140,8 +143,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
             >
               <Heart
                 className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${isWishlisted
-                    ? 'fill-red-500 text-red-500 scale-110'
-                    : 'text-foreground'
+                  ? 'fill-red-500 text-red-500 scale-110'
+                  : 'text-foreground'
                   }`}
               />
               {isWishlisted && (
@@ -171,15 +174,17 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
               transform: isHovered ? 'translateY(0)' : 'translateY(20px)',
             }}
           >
-            <Button
-              onClick={onQuickView}
-              size="sm"
-              variant="secondary"
-              className="flex-1 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md hover:bg-white dark:hover:bg-neutral-800 shadow-lg border-0 font-semibold transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
-            >
-              <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              Quick View
-            </Button>
+            <Link href={`products/${product.slug}`} className='flex-1 w-full'>
+              <Button
+                onClick={onQuickView}
+                size="sm"
+                variant="secondary"
+                className="flex-1 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md hover:bg-white dark:hover:bg-neutral-800 shadow-lg border-0 font-semibold transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
+              >
+                <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                Quick View
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -209,8 +214,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
                 <Star
                   key={i}
                   className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-300 ${i < Math.floor(rating)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-muted-foreground/30'
+                    ? 'fill-amber-400 text-amber-400'
+                    : 'text-muted-foreground/30'
                     }`}
                 />
               ))}
@@ -255,13 +260,13 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           <div className="flex items-center gap-2 py-1.5 sm:py-2">
             <div
               className={`w-2 h-2 rounded-full ${product.stock > 10 ? 'bg-green-500' :
-                  product.stock > 0 ? 'bg-orange-500' :
-                    'bg-red-500'
+                product.stock > 0 ? 'bg-orange-500' :
+                  'bg-red-500'
                 } animate-pulse`}
             />
             <span className={`text-xs sm:text-sm font-semibold ${product.stock > 10 ? 'text-green-600 dark:text-green-400' :
-                product.stock > 0 ? 'text-orange-600 dark:text-orange-400' :
-                  'text-red-600 dark:text-red-400'
+              product.stock > 0 ? 'text-orange-600 dark:text-orange-400' :
+                'text-red-600 dark:text-red-400'
               }`}>
               {product.stock > 10 ? 'In Stock' :
                 product.stock > 0 ? `Low Stock (${product.stock})` :
@@ -270,28 +275,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           </div>
 
           {/* Add to Cart Button */}
-          <Button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0 || isAddingToCart}
-            className="w-full bg-foreground hover:bg-foreground/90 text-background font-bold py-5 sm:py-6 rounded-2xl transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group/button text-sm sm:text-base"
-          >
-            {/* Shimmer Effect */}
-            <div
-              className="absolute inset-0 -translate-x-full group-hover/button:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"
-            />
+          <AddToCartButton product={{ name: product.name, image: product.images[0], price: product.price, slug: product.slug, id: product._id }} />
 
-            {isAddingToCart ? (
-              <div className="flex items-center gap-2 justify-center">
-                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                <span>Adding...</span>
-              </div>
-            ) : (
-              <>
-                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform group-hover/button:scale-110" />
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-              </>
-            )}
-          </Button>
         </div>
       </CardContent>
 
