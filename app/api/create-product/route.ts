@@ -180,6 +180,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
 
         const validation = validateProductInput(rawBody as Record<string, unknown>);
+        
+
+            
+
 
         if (!validation.isValid) {
             return NextResponse.json(
