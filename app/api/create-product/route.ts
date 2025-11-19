@@ -3,74 +3,86 @@ import connectDB from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import type { ProductInput } from "@/types/product";
+import { uploadFilesToCloudinary } from "@/lib/cloudinary-buffer";
 
-// Validation helper
-function validateProductInput(data: Record<string, unknown>): {
+// Validation helper for FormData
+async function validateProductFormData(formData: FormData): Promise<{
     isValid: boolean;
     errors: string[];
-    product?: ProductInput;
-} {
+    product?: Omit<ProductInput, 'images'>;
+    files?: File[];
+}> {
     const errors: string[] = [];
 
+    // Extract form fields
+    const name = formData.get('name');
+    const description = formData.get('description');
+    const priceStr = formData.get('price');
+    const category = formData.get('category');
+    const sku = formData.get('sku');
+    const stockStr = formData.get('stock');
+    const addedBy = formData.get('addedBy');
+    const brand = formData.get('brand');
+    const compareAtPriceStr = formData.get('compareAtPrice');
+    const isActiveStr = formData.get('isActive');
+    const isFeaturedStr = formData.get('isFeatured');
+    const specificationsStr = formData.get('specifications');
+    const tagsStr = formData.get('tags');
+
     // Required fields validation
-    if (!data.name || typeof data.name !== 'string' || data.name.trim().length === 0) {
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
         errors.push('Product name is required and must be a non-empty string');
     }
 
-    if (!data.description || typeof data.description !== 'string' || data.description.trim().length === 0) {
+    if (!description || typeof description !== 'string' || description.trim().length === 0) {
         errors.push('Product description is required and must be a non-empty string');
     }
 
-    if (!data.category || typeof data.category !== 'string' || data.category.trim().length === 0) {
+    if (!category || typeof category !== 'string' || category.trim().length === 0) {
         errors.push('Product category is required and must be a non-empty string');
     }
 
-    if (!data.sku || typeof data.sku !== 'string' || data.sku.trim().length === 0) {
+    if (!sku || typeof sku !== 'string' || sku.trim().length === 0) {
         errors.push('SKU is required and must be a non-empty string');
     }
 
-    if (!data.addedBy || typeof data.addedBy !== 'string' || !mongoose.Types.ObjectId.isValid(data.addedBy)) {
+    if (!addedBy || typeof addedBy !== 'string' || !mongoose.Types.ObjectId.isValid(addedBy)) {
         errors.push('Valid addedBy user ID is required');
     }
 
     // Price validation
-    const price = Number(data.price);
+    const price = priceStr ? Number(priceStr) : NaN;
     if (isNaN(price) || price <= 0) {
         errors.push('Price must be a positive number');
     }
 
     // Stock validation
-    const stock = Number(data.stock);
+    const stock = stockStr ? Number(stockStr) : NaN;
     if (isNaN(stock) || stock < 0) {
         errors.push('Stock must be a non-negative number');
     }
 
-    // Images validation
-    let images: string[] = [];
-    if (typeof data.images === 'string') {
-        try {
-            images = JSON.parse(data.images);
-        } catch {
-            errors.push('Images must be a valid JSON array of strings');
-        }
-    } else if (Array.isArray(data.images)) {
-        images = data.images;
-    } else {
-        errors.push('Images must be an array of strings');
-    }
-
-    if (images.length === 0) {
+    // Files validation
+    const files: File[] = [];
+    const imageFiles = formData.getAll('images');
+    
+    if (imageFiles.length === 0) {
         errors.push('At least one product image is required');
-    }
-
-    if (!images.every(img => typeof img === 'string' && img.trim().length > 0)) {
-        errors.push('All images must be valid non-empty strings');
+    } else {
+        for (const file of imageFiles) {
+            if (file instanceof File && file.size > 0) {
+                files.push(file);
+            } else {
+                errors.push('Invalid image file format');
+                break;
+            }
+        }
     }
 
     // Optional compareAtPrice validation
     let compareAtPrice: number | undefined;
-    if (data.compareAtPrice !== undefined && data.compareAtPrice !== null && data.compareAtPrice !== '') {
-        compareAtPrice = Number(data.compareAtPrice);
+    if (compareAtPriceStr && typeof compareAtPriceStr === 'string' && compareAtPriceStr.trim() !== '') {
+        compareAtPrice = Number(compareAtPriceStr);
         if (isNaN(compareAtPrice)) {
             errors.push('Compare at price must be a valid number');
         } else if (compareAtPrice <= price) {
@@ -78,53 +90,35 @@ function validateProductInput(data: Record<string, unknown>): {
         }
     }
 
-    // Optional fields with type checking
-    let brand: string | undefined;
-    if (data.brand && typeof data.brand === 'string') {
-        brand = data.brand.trim();
-    }
-
-    let isActive: boolean = true;
-    if (data.isActive !== undefined && data.isActive !== null && data.isActive !== '') {
-        isActive = data.isActive === 'true' || data.isActive === true;
-    }
-
-    let isFeatured: boolean = false;
-    if (data.isFeatured !== undefined && data.isFeatured !== null && data.isFeatured !== '') {
-        isFeatured = data.isFeatured === 'true' || data.isFeatured === true;
-    }
+    // Optional fields
+    const isActive = !isActiveStr || isActiveStr === 'true' || isActiveStr === '1';
+    const isFeatured = isFeaturedStr === 'true' || isFeaturedStr === '1';
 
     // Parse specifications if provided
     let specifications: Record<string, string> | undefined;
-    if (data.specifications) {
-        if (typeof data.specifications === 'string') {
-            try {
-                specifications = JSON.parse(data.specifications);
-                if (typeof specifications !== 'object' || specifications === null) {
-                    errors.push('Specifications must be a valid JSON object');
-                }
-            } catch {
-                errors.push('Specifications must be valid JSON');
+    if (specificationsStr && typeof specificationsStr === 'string') {
+        try {
+            specifications = JSON.parse(specificationsStr);
+            if (typeof specifications !== 'object' || specifications === null || Array.isArray(specifications)) {
+                errors.push('Specifications must be a valid JSON object');
+                specifications = undefined;
             }
-        } else if (typeof data.specifications === 'object') {
-            specifications = data.specifications as Record<string, string>;
+        } catch {
+            errors.push('Specifications must be valid JSON');
         }
     }
 
     // Parse tags if provided
     let tags: string[] | undefined;
-    if (data.tags) {
-        if (typeof data.tags === 'string') {
-            try {
-                tags = JSON.parse(data.tags);
-                if (!Array.isArray(tags) || !tags.every(tag => typeof tag === 'string')) {
-                    errors.push('Tags must be an array of strings');
-                }
-            } catch {
-                errors.push('Tags must be valid JSON array');
+    if (tagsStr && typeof tagsStr === 'string') {
+        try {
+            tags = JSON.parse(tagsStr);
+            if (!Array.isArray(tags) || !tags.every(tag => typeof tag === 'string')) {
+                errors.push('Tags must be an array of strings');
+                tags = undefined;
             }
-        } else if (Array.isArray(data.tags)) {
-            tags = data.tags;
+        } catch {
+            errors.push('Tags must be valid JSON array');
         }
     }
 
@@ -132,24 +126,24 @@ function validateProductInput(data: Record<string, unknown>): {
         return { isValid: false, errors };
     }
 
-    const product: ProductInput = {
-        name: (data.name as string).trim(),
-        description: (data.description as string).trim(),
+    const product: Omit<ProductInput, 'images'> = {
+        name: (name as string).trim(),
+        description: (description as string).trim(),
         price,
-        category: (data.category as string).trim(),
-        images,
+        category: (category as string).trim(),
         stock,
-        sku: (data.sku as string).trim(),
+        sku: (sku as string).trim(),
         isActive,
         isFeatured,
-        addedBy: data.addedBy as string,
+        addedBy: addedBy as string,
+        images: [], // Will be filled after upload
     };
 
     if (compareAtPrice !== undefined) {
         product.compareAtPrice = compareAtPrice;
     }
-    if (brand) {
-        product.brand = brand;
+    if (brand && typeof brand === 'string' && brand.trim()) {
+        product.brand = brand.trim();
     }
     if (specifications) {
         product.specifications = specifications;
@@ -158,7 +152,7 @@ function validateProductInput(data: Record<string, unknown>): {
         product.tags = tags;
     }
 
-    return { isValid: true, errors: [], product };
+    return { isValid: true, errors: [], product, files };
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -166,24 +160,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // Connect to database
         await connectDB();
 
-        // Parse JSON body
-        const rawBody = await req.json().catch(() => null);
-
-        if (!rawBody || typeof rawBody !== "object" || Array.isArray(rawBody)) {
+        // Parse FormData
+        let formData: FormData;
+        try {
+            formData = await req.formData();
+        } catch (error) {
+            console.error('Error parsing FormData:', error);
             return NextResponse.json(
                 {
                     message: "Invalid request body",
-                    errors: ["Request body must be a JSON object"],
+                    errors: ["Request body must be FormData"],
                 },
                 { status: 400 }
             );
         }
 
-        const validation = validateProductInput(rawBody as Record<string, unknown>);
-        
-
-            
-
+        const validation = await validateProductFormData(formData);
 
         if (!validation.isValid) {
             return NextResponse.json(
@@ -195,10 +187,42 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             );
         }
 
-        // Create product with validated data
-        const createdProduct = await Product.create(validation.product);
+        if (!validation.product || !validation.files) {
+            return NextResponse.json(
+                {
+                    message: 'Validation failed',
+                    errors: ['Product data or files are missing']
+                },
+                { status: 400 }
+            );
+        }
 
-        // Return sanitized response (exclude sensitive fields if any)
+        // Upload images to Cloudinary
+        const uploadResult = await uploadFilesToCloudinary(
+            validation.files,
+            'ecommerce_mini'
+        );
+
+        if (!uploadResult.success) {
+            return NextResponse.json(
+                {
+                    message: 'Image upload failed',
+                    error: uploadResult.error,
+                    failedFile: uploadResult.failedFile,
+                },
+                { status: 400 }
+            );
+        }
+
+        // Create product with uploaded image URLs
+        const productData: ProductInput = {
+            ...validation.product,
+            images: uploadResult.uploadedUrls,
+        };
+
+        const createdProduct = await Product.create(productData);
+
+        // Return sanitized response
         return NextResponse.json(
             {
                 message: 'Product created successfully',
@@ -211,6 +235,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                     sku: createdProduct.sku,
                     stock: createdProduct.stock,
                     isActive: createdProduct.isActive,
+                    images: createdProduct.images,
                 }
             },
             { status: 201 }
@@ -220,7 +245,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         console.error('Error creating product:', error);
 
         // Handle MongoDB duplicate key errors
-        if (error instanceof Error && 'code' in error && error.code === 11000) {
+        if (error instanceof Error && 'code' in error && (error as { code: number }).code === 11000) {
             return NextResponse.json(
                 {
                     message: 'Product with this SKU or slug already exists',

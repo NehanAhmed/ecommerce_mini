@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import type { ProductInput } from '@/types/product';
 import Link from 'next/link';
 
 interface SpecificationField {
@@ -23,7 +22,6 @@ interface CreateProductFormState {
     compareAtPrice: string;
     category: string;
     brand: string;
-    images: string[];
     stock: string;
     sku: string;
     isActive: boolean;
@@ -46,7 +44,6 @@ export default function CreateProductPage() {
         compareAtPrice: '',
         category: '',
         brand: '',
-        images: [],
         stock: '',
         sku: '',
         isActive: true,
@@ -55,8 +52,10 @@ export default function CreateProductPage() {
         tags: [],
     });
 
-    const [tagInput, setTagInput] = useState<string>('');
+    // Store actual File objects instead of blob URLs
+    const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [tagInput, setTagInput] = useState<string>('');
     const [errors, setErrors] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -64,10 +63,13 @@ export default function CreateProductPage() {
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     ) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value } = e.target;
+        const target = e.target as HTMLInputElement;
+        const checked = target.type === 'checkbox' ? target.checked : undefined;
+        
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: target.type === 'checkbox' ? checked : value
         }));
 
         // Auto-generate slug from name
@@ -120,20 +122,21 @@ export default function CreateProductPage() {
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files ?? []);
+        
+        // Store the actual File objects
+        setImageFiles((prev) => [...prev, ...files]);
+        
+        // Create preview URLs for display only
         const newPreviews = files.map((file) => URL.createObjectURL(file));
         setImagePreview((prev) => [...prev, ...newPreviews]);
-        setFormData((prev) => ({
-            ...prev,
-            images: [...prev.images, ...newPreviews],
-        }));
     };
 
     const removeImage = (index: number) => {
+        // Revoke the blob URL to free memory
+        URL.revokeObjectURL(imagePreview[index]);
+        
         setImagePreview((prev) => prev.filter((_, i) => i !== index));
-        setFormData((prev) => ({
-            ...prev,
-            images: prev.images.filter((_, i) => i !== index),
-        }));
+        setImageFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async () => {
@@ -157,7 +160,7 @@ export default function CreateProductPage() {
             clientErrors.push('Stock must be a non-negative number.');
         }
 
-        if (formData.images.length === 0) {
+        if (imageFiles.length === 0) {
             clientErrors.push('At least one product image is required.');
         }
 
@@ -177,37 +180,54 @@ export default function CreateProductPage() {
             return;
         }
 
+        // Create FormData instead of JSON
+        const formDataToSend = new FormData();
+
+        // Add all form fields
+        formDataToSend.append('name', formData.name.trim());
+        formDataToSend.append('description', formData.description.trim());
+        formDataToSend.append('price', formData.price);
+        formDataToSend.append('category', formData.category.trim());
+        formDataToSend.append('stock', formData.stock);
+        formDataToSend.append('sku', formData.sku.trim());
+        formDataToSend.append('isActive', String(formData.isActive));
+        formDataToSend.append('isFeatured', String(formData.isFeatured));
+        formDataToSend.append('addedBy', DEMO_ADMIN_ID);
+
+        // Add optional fields
+        if (formData.compareAtPrice.trim()) {
+            formDataToSend.append('compareAtPrice', formData.compareAtPrice);
+        }
+        if (formData.brand.trim()) {
+            formDataToSend.append('brand', formData.brand.trim());
+        }
+
+        // Add specifications as JSON string
         const specsEntries = formData.specifications
             .filter((spec) => spec.key.trim() && spec.value.trim())
             .map<[string, string]>((spec) => [spec.key.trim(), spec.value.trim()]);
 
-        const specifications =
-            specsEntries.length > 0 ? Object.fromEntries(specsEntries) : undefined;
+        if (specsEntries.length > 0) {
+            formDataToSend.append('specifications', JSON.stringify(Object.fromEntries(specsEntries)));
+        }
 
-        const payload: ProductInput = {
-            name: formData.name.trim(),
-            description: formData.description.trim(),
-            price,
-            compareAtPrice,
-            category: formData.category.trim(),
-            brand: formData.brand.trim() || undefined,
-            images: formData.images,
-            stock,
-            sku: formData.sku.trim(),
-            isActive: formData.isActive,
-            isFeatured: formData.isFeatured,
-            specifications,
-            tags: formData.tags.length > 0 ? formData.tags : undefined,
-            addedBy: DEMO_ADMIN_ID,
-        };
+        // Add tags as JSON string
+        if (formData.tags.length > 0) {
+            formDataToSend.append('tags', JSON.stringify(formData.tags));
+        }
+
+        // Add image files
+        imageFiles.forEach((file) => {
+            formDataToSend.append('images', file);
+        });
 
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:3000/api/create-product', {
+            const response = await fetch('/api/create-product', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: formDataToSend, // Send FormData, not JSON
+                // Don't set Content-Type header - browser will set it automatically with boundary
             });
 
             const data = await response.json();
@@ -223,8 +243,13 @@ export default function CreateProductPage() {
             }
 
             setSuccessMessage('Product created successfully.');
+            
+            // Clean up blob URLs
+            imagePreview.forEach(url => URL.revokeObjectURL(url));
+            
             router.push('/dashboard/products');
         } catch (error) {
+            console.error('Error creating product:', error);
             setErrors(['Unexpected error while creating product.']);
         } finally {
             setIsSubmitting(false);
@@ -237,11 +262,9 @@ export default function CreateProductPage() {
                 {/* Header */}
                 <div className='absolute left-30 rounded-full '>
                     <Link href='/dashboard/products'>
-                    
-                    <Button variant={'link'}>
-
-                    <ArrowLeft />
-                    </Button>
+                        <Button variant={'link'}>
+                            <ArrowLeft />
+                        </Button>
                     </Link>
                 </div>
                 <div className="mb-8">
@@ -446,7 +469,7 @@ export default function CreateProductPage() {
                                             Click to upload or drag and drop
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            PNG, JPG or WEBP (max. 5MB)
+                                            PNG, JPG or WEBP (max. 10MB per file)
                                         </p>
                                     </div>
                                     <Input
