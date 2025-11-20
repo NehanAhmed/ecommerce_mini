@@ -6,8 +6,11 @@ import { useCart } from '@/context/CartContext';
 export default function CartIcon() {
   const { cartCount } = useCart();
 
+  const ariaLabel =
+    cartCount > 0 ? `Cart with ${cartCount} item${cartCount === 1 ? '' : 's'}` : 'Cart';
+
   return (
-    <Link href="/cart" className="relative">
+    <Link href="/cart" className="relative" aria-label={ariaLabel}>
       <svg
         className="w-6 h-6"
         fill="none"
@@ -29,4 +32,5 @@ export default function CartIcon() {
       )}
     </Link>
   );
+}
 }
