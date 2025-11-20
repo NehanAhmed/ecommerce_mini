@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   closestCenter,
   DndContext,
@@ -107,13 +108,17 @@ import {
 } from "@/components/ui/tabs"
 
 export const schema = z.object({
-  id: z.number(),
-  header: z.string(),
-  type: z.string(),
-  status: z.string(),
-  target: z.string(),
-  limit: z.string(),
-  reviewer: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  price: z.number(),
+  compareAtPrice: z.number().optional(),
+  category: z.string(),
+  brand: z.string().optional(),
+  stock: z.number(),
+  sku: z.string(),
+  isActive: z.boolean(),
+  isFeatured: z.boolean(),
+  createdAt: z.string(),
 })
 
 // Create a separate component for the drag handle
@@ -140,7 +145,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     id: "drag",
     header: () => null,
-    cell: ({ row }) => <DragHandle id={row.original.id} />,
+    cell: ({ row }) => <DragHandle id={row.index} />,
   },
   {
     id: "select",
@@ -169,121 +174,83 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "header",
-    header: "Header",
+    accessorKey: "name",
+    header: "Product Name",
     cell: ({ row }) => {
-      return <TableCellViewer item={row.original} />
+      const slug = row.original.slug
+      return (
+        <Link 
+          href={`/dashboard/products/${slug}`}
+          className="text-primary hover:underline font-medium"
+        >
+          {row.original.name}
+        </Link>
+      )
     },
     enableHiding: false,
   },
   {
-    accessorKey: "type",
-    header: "Section Type",
-    cell: ({ row }) => (
-      <div className="w-32">
-        <Badge variant="outline" className="text-muted-foreground px-1.5">
-          {row.original.type}
-        </Badge>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "sku",
+    header: "SKU",
     cell: ({ row }) => (
       <Badge variant="outline" className="text-muted-foreground px-1.5">
-        {row.original.status === "Done" ? (
-          <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
-        ) : (
-          <IconLoader />
-        )}
-        {row.original.status}
+        {row.original.sku}
       </Badge>
     ),
   },
   {
-    accessorKey: "target",
-    header: () => <div className="w-full text-right">Target</div>,
+    accessorKey: "category",
+    header: "Category",
     cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
-            success: "Done",
-            error: "Error",
-          })
-        }}
-      >
-        <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-          Target
-        </Label>
-        <Input
-          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.target}
-          id={`${row.original.id}-target`}
-        />
-      </form>
+      <Badge variant="outline" className="text-muted-foreground px-1.5">
+        {row.original.category}
+      </Badge>
     ),
   },
   {
-    accessorKey: "limit",
-    header: () => <div className="w-full text-right">Limit</div>,
+    accessorKey: "price",
+    header: () => <div className="w-full text-right">Price</div>,
     cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
-            success: "Done",
-            error: "Error",
-          })
-        }}
-      >
-        <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-          Limit
-        </Label>
-        <Input
-          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.limit}
-          id={`${row.original.id}-limit`}
-        />
-      </form>
+      <div className="text-right font-semibold">
+        ${row.original.price ? row.original.price.toFixed(2) : "0.00"}
+      </div>
     ),
   },
   {
-    accessorKey: "reviewer",
-    header: "Reviewer",
-    cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer"
-
-      if (isAssigned) {
-        return row.original.reviewer
-      }
-
-      return (
-        <>
-          <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-            Reviewer
-          </Label>
-          <Select>
-            <SelectTrigger
-              className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
-              size="sm"
-              id={`${row.original.id}-reviewer`}
-            >
-              <SelectValue placeholder="Assign reviewer" />
-            </SelectTrigger>
-            <SelectContent align="end">
-              <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-              <SelectItem value="Jamik Tashpulatov">
-                Jamik Tashpulatov
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </>
-      )
-    },
+    accessorKey: "stock",
+    header: () => <div className="w-full text-right">Stock</div>,
+    cell: ({ row }) => (
+      <div className="text-right font-medium">
+        {row.original.stock !== undefined && row.original.stock > 0 ? (
+          <span className="text-foreground">{row.original.stock} units</span>
+        ) : (
+          <span className="text-destructive">Out of stock</span>
+        )}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "isActive",
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge variant="outline" className="text-muted-foreground px-1.5">
+        {row.original.isActive ? (
+          <IconCircleCheckFilled className="fill-accent dark:fill-accent" />
+        ) : (
+          <IconLoader />
+        )}
+        {row.original.isActive ? "Active" : "Inactive"}
+      </Badge>
+    ),
+  },
+  {
+    accessorKey: "isFeatured",
+    header: "Featured",
+    cell: ({ row }) => (
+      <Badge variant="outline" className="text-muted-foreground px-1.5">
+        {row.original.isFeatured ? "Yes" : "No"}
+      </Badge>
+    ),
   },
   {
     id: "actions",
@@ -313,7 +280,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
 
 function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
-    id: row.original.id,
+    id: row.index,
   })
 
   return (
@@ -339,9 +306,25 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
 export function DataTable({
   data: initialData,
 }: {
-  data: z.infer<typeof schema>[]
+  data: z.infer<typeof schema>[] | any
 }) {
-  const [data, setData] = React.useState(() => initialData)
+  // Ensure data is an array and has required fields with defaults
+  const dataArray = Array.isArray(initialData) ? initialData : []
+  const sanitizedData = (dataArray || []).map((item) => ({
+    name: item.name || "Unknown Product",
+    slug: item.slug || "",
+    price: item.price ?? 0,
+    compareAtPrice: item.compareAtPrice,
+    category: item.category || "Uncategorized",
+    brand: item.brand,
+    stock: item.stock ?? 0,
+    sku: item.sku || "N/A",
+    isActive: item.isActive ?? false,
+    isFeatured: item.isFeatured ?? false,
+    createdAt: item.createdAt || new Date().toISOString(),
+  }))
+
+  const [data, setData] = React.useState(() => sanitizedData)
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -361,7 +344,7 @@ export function DataTable({
   )
 
   const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => data?.map(({ id }) => id) || [],
+    () => data?.map((item, index) => index) || [],
     [data]
   )
 
@@ -375,7 +358,7 @@ export function DataTable({
       columnFilters,
       pagination,
     },
-    getRowId: (row) => row.id.toString(),
+    getRowId: (row, index) => index.toString(),
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -410,31 +393,7 @@ export function DataTable({
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <Select defaultValue="outline">
-          <SelectTrigger
-            className="flex w-fit @4xl/main:hidden"
-            size="sm"
-            id="view-selector"
-          >
-            <SelectValue placeholder="Select a view" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="outline">Outline</SelectItem>
-            <SelectItem value="past-performance">Past Performance</SelectItem>
-            <SelectItem value="key-personnel">Key Personnel</SelectItem>
-            <SelectItem value="focus-documents">Focus Documents</SelectItem>
-          </SelectContent>
-        </Select>
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger value="outline">Outline</TabsTrigger>
-          <TabsTrigger value="past-performance">
-            Past Performance <Badge variant="secondary">3</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="key-personnel">
-            Key Personnel <Badge variant="secondary">2</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
-        </TabsList>
+       
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -654,149 +613,91 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     <Drawer direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
-          {item.header}
+          {item.name}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="gap-1">
-          <DrawerTitle>{item.header}</DrawerTitle>
+          <DrawerTitle>{item.name}</DrawerTitle>
           <DrawerDescription>
-            Showing total visitors for the last 6 months
+            SKU: {item.sku} | Category: {item.category}
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
-          {!isMobile && (
-            <>
-              <ChartContainer config={chartConfig}>
-                <AreaChart
-                  accessibilityLayer
-                  data={chartData}
-                  margin={{
-                    left: 0,
-                    right: 10,
-                  }}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                    hide
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dot" />}
-                  />
-                  <Area
-                    dataKey="mobile"
-                    type="natural"
-                    fill="var(--color-mobile)"
-                    fillOpacity={0.6}
-                    stroke="var(--color-mobile)"
-                    stackId="a"
-                  />
-                  <Area
-                    dataKey="desktop"
-                    type="natural"
-                    fill="var(--color-desktop)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-desktop)"
-                    stackId="a"
-                  />
-                </AreaChart>
-              </ChartContainer>
-              <Separator />
-              <div className="grid gap-2">
-                <div className="flex gap-2 leading-none font-medium">
-                  Trending up by 5.2% this month{" "}
-                  <IconTrendingUp className="size-4" />
-                </div>
-                <div className="text-muted-foreground">
-                  Showing total visitors for the last 6 months. This is just
-                  some random text to test the layout. It spans multiple lines
-                  and should wrap around.
-                </div>
-              </div>
-              <Separator />
-            </>
-          )}
+          <Separator />
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-3">
-              <Label htmlFor="header">Header</Label>
-              <Input id="header" defaultValue={item.header} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="type">Type</Label>
-                <Select defaultValue={item.type}>
-                  <SelectTrigger id="type" className="w-full">
-                    <SelectValue placeholder="Select a type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Table of Contents">
-                      Table of Contents
-                    </SelectItem>
-                    <SelectItem value="Executive Summary">
-                      Executive Summary
-                    </SelectItem>
-                    <SelectItem value="Technical Approach">
-                      Technical Approach
-                    </SelectItem>
-                    <SelectItem value="Design">Design</SelectItem>
-                    <SelectItem value="Capabilities">Capabilities</SelectItem>
-                    <SelectItem value="Focus Documents">
-                      Focus Documents
-                    </SelectItem>
-                    <SelectItem value="Narrative">Narrative</SelectItem>
-                    <SelectItem value="Cover Page">Cover Page</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="status">Status</Label>
-                <Select defaultValue={item.status}>
-                  <SelectTrigger id="status" className="w-full">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Done">Done</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Not Started">Not Started</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="target">Target</Label>
-                <Input id="target" defaultValue={item.target} />
-              </div>
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="limit">Limit</Label>
-                <Input id="limit" defaultValue={item.limit} />
-              </div>
+              <Label htmlFor="name">Product Name</Label>
+              <Input id="name" defaultValue={item.name} />
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Reviewer</Label>
-              <Select defaultValue={item.reviewer}>
-                <SelectTrigger id="reviewer" className="w-full">
-                  <SelectValue placeholder="Select a reviewer" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                  <SelectItem value="Jamik Tashpulatov">
-                    Jamik Tashpulatov
-                  </SelectItem>
-                  <SelectItem value="Emily Whalen">Emily Whalen</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="slug">Slug</Label>
+              <Input id="slug" defaultValue={item.slug} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="category">Category</Label>
+                <Input id="category" defaultValue={item.category} />
+              </div>
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="brand">Brand</Label>
+                <Input id="brand" defaultValue={item.brand || ""} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="price">Price</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  step="0.01"
+                  defaultValue={item.price}
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="compareAtPrice">Compare at Price</Label>
+                <Input
+                  id="compareAtPrice"
+                  type="number"
+                  step="0.01"
+                  defaultValue={item.compareAtPrice || ""}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="sku">SKU</Label>
+                <Input id="sku" defaultValue={item.sku} />
+              </div>
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="stock">Stock</Label>
+                <Input
+                  id="stock"
+                  type="number"
+                  defaultValue={item.stock}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="isActive"
+                  defaultChecked={item.isActive}
+                />
+                <Label htmlFor="isActive">Active</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="isFeatured"
+                  defaultChecked={item.isFeatured}
+                />
+                <Label htmlFor="isFeatured">Featured</Label>
+              </div>
             </div>
           </form>
         </div>
         <DrawerFooter>
-          <Button>Submit</Button>
+          <Button>Update Product</Button>
           <DrawerClose asChild>
             <Button variant="outline">Done</Button>
           </DrawerClose>

@@ -1,614 +1,432 @@
 [
   {
-    "id": 1,
-    "header": "Cover page",
-    "type": "Cover page",
-    "status": "In Process",
-    "target": "18",
-    "limit": "5",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 2,
-    "header": "Table of contents",
-    "type": "Table of contents",
-    "status": "Done",
-    "target": "29",
-    "limit": "24",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 3,
-    "header": "Executive summary",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "10",
-    "limit": "13",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 4,
-    "header": "Technical approach",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "27",
-    "limit": "23",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 5,
-    "header": "Design",
-    "type": "Narrative",
-    "status": "In Process",
-    "target": "2",
-    "limit": "16",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 6,
-    "header": "Capabilities",
-    "type": "Narrative",
-    "status": "In Process",
-    "target": "20",
-    "limit": "8",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 7,
-    "header": "Integration with existing systems",
-    "type": "Narrative",
-    "status": "In Process",
-    "target": "19",
-    "limit": "21",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 8,
-    "header": "Innovation and Advantages",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "25",
-    "limit": "26",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 9,
-    "header": "Overview of EMR's Innovative Solutions",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "7",
-    "limit": "23",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 10,
-    "header": "Advanced Algorithms and Machine Learning",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "30",
-    "limit": "28",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 11,
-    "header": "Adaptive Communication Protocols",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "9",
-    "limit": "31",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 12,
-    "header": "Advantages Over Current Technologies",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "12",
-    "limit": "0",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 13,
-    "header": "Past Performance",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "22",
-    "limit": "33",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 14,
-    "header": "Customer Feedback and Satisfaction Levels",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "15",
-    "limit": "34",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 15,
-    "header": "Implementation Challenges and Solutions",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "3",
-    "limit": "35",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 16,
-    "header": "Security Measures and Data Protection Policies",
-    "type": "Narrative",
-    "status": "In Process",
-    "target": "6",
-    "limit": "36",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 17,
-    "header": "Scalability and Future Proofing",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "4",
-    "limit": "37",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 18,
-    "header": "Cost-Benefit Analysis",
-    "type": "Plain language",
-    "status": "Done",
-    "target": "14",
-    "limit": "38",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 19,
-    "header": "User Training and Onboarding Experience",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "17",
-    "limit": "39",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 20,
-    "header": "Future Development Roadmap",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "11",
-    "limit": "40",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 21,
-    "header": "System Architecture Overview",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "24",
-    "limit": "18",
-    "reviewer": "Maya Johnson"
-  },
-  {
-    "id": 22,
-    "header": "Risk Management Plan",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "15",
-    "limit": "22",
-    "reviewer": "Carlos Rodriguez"
-  },
-  {
-    "id": 23,
-    "header": "Compliance Documentation",
-    "type": "Legal",
-    "status": "In Process",
-    "target": "31",
-    "limit": "27",
-    "reviewer": "Sarah Chen"
-  },
-  {
-    "id": 24,
-    "header": "API Documentation",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "8",
-    "limit": "12",
-    "reviewer": "Raj Patel"
-  },
-  {
-    "id": 25,
-    "header": "User Interface Mockups",
-    "type": "Visual",
-    "status": "In Process",
-    "target": "19",
-    "limit": "25",
-    "reviewer": "Leila Ahmadi"
-  },
-  {
-    "id": 26,
-    "header": "Database Schema",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "22",
-    "limit": "20",
-    "reviewer": "Thomas Wilson"
-  },
-  {
-    "id": 27,
-    "header": "Testing Methodology",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "17",
-    "limit": "14",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 28,
-    "header": "Deployment Strategy",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "26",
-    "limit": "30",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 29,
-    "header": "Budget Breakdown",
-    "type": "Financial",
-    "status": "In Process",
-    "target": "13",
-    "limit": "16",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 30,
-    "header": "Market Analysis",
-    "type": "Research",
-    "status": "Done",
-    "target": "29",
-    "limit": "32",
-    "reviewer": "Sophia Martinez"
-  },
-  {
-    "id": 31,
-    "header": "Competitor Comparison",
-    "type": "Research",
-    "status": "In Process",
-    "target": "21",
-    "limit": "19",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 32,
-    "header": "Maintenance Plan",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "16",
-    "limit": "23",
-    "reviewer": "Alex Thompson"
-  },
-  {
-    "id": 33,
-    "header": "User Personas",
-    "type": "Research",
-    "status": "In Process",
-    "target": "27",
-    "limit": "24",
-    "reviewer": "Nina Patel"
-  },
-  {
-    "id": 34,
-    "header": "Accessibility Compliance",
-    "type": "Legal",
-    "status": "Done",
-    "target": "18",
-    "limit": "21",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 35,
-    "header": "Performance Metrics",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "23",
-    "limit": "26",
-    "reviewer": "David Kim"
-  },
-  {
-    "id": 36,
-    "header": "Disaster Recovery Plan",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "14",
-    "limit": "17",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 37,
-    "header": "Third-party Integrations",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "25",
-    "limit": "28",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 38,
-    "header": "User Feedback Summary",
-    "type": "Research",
-    "status": "Done",
-    "target": "20",
-    "limit": "15",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 39,
-    "header": "Localization Strategy",
-    "type": "Narrative",
-    "status": "In Process",
-    "target": "12",
-    "limit": "19",
-    "reviewer": "Maria Garcia"
-  },
-  {
-    "id": 40,
-    "header": "Mobile Compatibility",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "28",
-    "limit": "31",
-    "reviewer": "James Wilson"
-  },
-  {
-    "id": 41,
-    "header": "Data Migration Plan",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "19",
-    "limit": "22",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 42,
-    "header": "Quality Assurance Protocols",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "30",
-    "limit": "33",
-    "reviewer": "Priya Singh"
-  },
-  {
-    "id": 43,
-    "header": "Stakeholder Analysis",
-    "type": "Research",
-    "status": "In Process",
-    "target": "11",
-    "limit": "14",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 44,
-    "header": "Environmental Impact Assessment",
-    "type": "Research",
-    "status": "Done",
-    "target": "24",
-    "limit": "27",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 45,
-    "header": "Intellectual Property Rights",
-    "type": "Legal",
-    "status": "In Process",
-    "target": "17",
-    "limit": "20",
-    "reviewer": "Sarah Johnson"
-  },
-  {
-    "id": 46,
-    "header": "Customer Support Framework",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "22",
-    "limit": "25",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 47,
-    "header": "Version Control Strategy",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "15",
-    "limit": "18",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 48,
-    "header": "Continuous Integration Pipeline",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "26",
-    "limit": "29",
-    "reviewer": "Michael Chen"
-  },
-  {
-    "id": 49,
-    "header": "Regulatory Compliance",
-    "type": "Legal",
-    "status": "In Process",
-    "target": "13",
-    "limit": "16",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 50,
-    "header": "User Authentication System",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "28",
-    "limit": "31",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 51,
-    "header": "Data Analytics Framework",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "21",
-    "limit": "24",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 52,
-    "header": "Cloud Infrastructure",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "16",
-    "limit": "19",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 53,
-    "header": "Network Security Measures",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "29",
-    "limit": "32",
-    "reviewer": "Lisa Wong"
-  },
-  {
-    "id": 54,
-    "header": "Project Timeline",
-    "type": "Planning",
-    "status": "Done",
-    "target": "14",
-    "limit": "17",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 55,
-    "header": "Resource Allocation",
-    "type": "Planning",
-    "status": "In Process",
-    "target": "27",
-    "limit": "30",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 56,
-    "header": "Team Structure and Roles",
-    "type": "Planning",
-    "status": "Done",
-    "target": "20",
-    "limit": "23",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 57,
-    "header": "Communication Protocols",
-    "type": "Planning",
-    "status": "In Process",
-    "target": "15",
-    "limit": "18",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 58,
-    "header": "Success Metrics",
-    "type": "Planning",
-    "status": "Done",
-    "target": "30",
-    "limit": "33",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 59,
-    "header": "Internationalization Support",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "23",
-    "limit": "26",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 60,
-    "header": "Backup and Recovery Procedures",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "18",
-    "limit": "21",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 61,
-    "header": "Monitoring and Alerting System",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "25",
-    "limit": "28",
-    "reviewer": "Daniel Park"
-  },
-  {
-    "id": 62,
-    "header": "Code Review Guidelines",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "12",
-    "limit": "15",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 63,
-    "header": "Documentation Standards",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "27",
-    "limit": "30",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 64,
-    "header": "Release Management Process",
-    "type": "Planning",
-    "status": "Done",
-    "target": "22",
-    "limit": "25",
-    "reviewer": "Assign reviewer"
-  },
-  {
-    "id": 65,
-    "header": "Feature Prioritization Matrix",
-    "type": "Planning",
-    "status": "In Process",
-    "target": "19",
-    "limit": "22",
-    "reviewer": "Emma Davis"
-  },
-  {
-    "id": 66,
-    "header": "Technical Debt Assessment",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "24",
-    "limit": "27",
-    "reviewer": "Eddie Lake"
-  },
-  {
-    "id": 67,
-    "header": "Capacity Planning",
-    "type": "Planning",
-    "status": "In Process",
-    "target": "21",
-    "limit": "24",
-    "reviewer": "Jamik Tashpulatov"
-  },
-  {
-    "id": 68,
-    "header": "Service Level Agreements",
-    "type": "Legal",
-    "status": "Done",
-    "target": "26",
-    "limit": "29",
-    "reviewer": "Assign reviewer"
+    "name": "Apple iPhone 15 Pro",
+    "slug": "apple-iphone-15-pro",
+    "description": "Apple iPhone 15 Pro with A17 Pro chip, 6.1-inch Super Retina XDR display, and titanium build.",
+    "price": 1199,
+    "compareAtPrice": 1299,
+    "category": "Smartphones",
+    "brand": "Apple",
+    "images": [
+      "https://example.com/images/iphone15pro-1.jpg",
+      "https://example.com/images/iphone15pro-2.jpg"
+    ],
+    "stock": 42,
+    "sku": "IP15P-256-BLK",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Storage": "256GB",
+      "Chip": "A17 Pro",
+      "Display": "6.1-inch",
+      "Battery": "3274mAh"
+    },
+    "tags": ["iphone", "apple", "smartphone"],
+    "addedBy": "6740a1111111111111111111",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Samsung Galaxy S24 Ultra",
+    "slug": "samsung-galaxy-s24-ultra",
+    "description": "Samsung flagship with Snapdragon 8 Gen 3, 200MP main camera, and S Pen support.",
+    "price": 1399,
+    "compareAtPrice": 1499,
+    "category": "Smartphones",
+    "brand": "Samsung",
+    "images": [
+      "https://example.com/images/s24ultra-1.jpg",
+      "https://example.com/images/s24ultra-2.jpg"
+    ],
+    "stock": 55,
+    "sku": "S24U-512-GRY",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Storage": "512GB",
+      "Camera": "200MP",
+      "Display": "6.8-inch AMOLED",
+      "Battery": "5000mAh"
+    },
+    "tags": ["samsung", "android"],
+    "addedBy": "6740a2222222222222222222",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Sony WH-1000XM5",
+    "slug": "sony-wh-1000xm5",
+    "description": "Industry-leading noise-canceling wireless headphones with 30-hour battery life.",
+    "price": 399,
+    "compareAtPrice": 449,
+    "category": "Audio",
+    "brand": "Sony",
+    "images": ["https://example.com/images/xm5-1.jpg"],
+    "stock": 70,
+    "sku": "WHXM5-BLK",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Connectivity": "Bluetooth 5.2",
+      "Battery": "30 hours",
+      "Weight": "250g"
+    },
+    "tags": ["headphones", "sony", "audio"],
+    "addedBy": "6740a3333333333333333333",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Dell XPS 15 (2024)",
+    "slug": "dell-xps-15-2024",
+    "description": "Dell XPS 15 with Intel Core i9 14th-gen, RTX 4070 GPU, and 3.5K OLED display.",
+    "price": 2499,
+    "compareAtPrice": 2599,
+    "category": "Laptops",
+    "brand": "Dell",
+    "images": ["https://example.com/images/xps15-1.jpg"],
+    "stock": 18,
+    "sku": "DXPS15-24-I9",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "CPU": "Intel Core i9-14900H",
+      "GPU": "NVIDIA RTX 4070",
+      "RAM": "32GB",
+      "Storage": "1TB NVMe SSD"
+    },
+    "tags": ["laptop", "dell", "xps"],
+    "addedBy": "6740a4444444444444444444",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Apple MacBook Air M3",
+    "slug": "apple-macbook-air-m3",
+    "description": "Lightweight MacBook Air with M3 chip and 18-hour battery life.",
+    "price": 1299,
+    "compareAtPrice": 1399,
+    "category": "Laptops",
+    "brand": "Apple",
+    "images": ["https://example.com/images/macbookairm3-1.jpg"],
+    "stock": 63,
+    "sku": "MBA-M3-256",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Chip": "Apple M3",
+      "Display": "13.6-inch Retina",
+      "RAM": "8GB",
+      "Storage": "256GB SSD"
+    },
+    "tags": ["macbook", "apple"],
+    "addedBy": "6740a5555555555555555555",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Logitech MX Master 3S",
+    "slug": "logitech-mx-master-3s",
+    "description": "Ergonomic wireless mouse with silent clicks and 8K DPI precision tracking.",
+    "price": 119,
+    "compareAtPrice": 139,
+    "category": "Accessories",
+    "brand": "Logitech",
+    "images": ["https://example.com/images/mxmaster3s-1.jpg"],
+    "stock": 150,
+    "sku": "MXM3S-GRY",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "DPI": "8000",
+      "Battery": "70 days",
+      "Connectivity": "Bluetooth / Logi Bolt"
+    },
+    "tags": ["mouse", "logitech"],
+    "addedBy": "6740a6666666666666666666",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Samsung 32-inch Odyssey G7",
+    "slug": "samsung-odyssey-g7-32",
+    "description": "1440p 240Hz curved gaming monitor with QLED technology.",
+    "price": 749,
+    "compareAtPrice": 799,
+    "category": "Monitors",
+    "brand": "Samsung",
+    "images": ["https://example.com/images/g7-32.jpg"],
+    "stock": 22,
+    "sku": "ODG7-32",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Resolution": "2560x1440",
+      "RefreshRate": "240Hz",
+      "Panel": "QLED",
+      "Curve": "1000R"
+    },
+    "tags": ["monitor", "gaming"],
+    "addedBy": "6740a7777777777777777777",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Canon EOS R6 Mark II",
+    "slug": "canon-eos-r6-mk2",
+    "description": "Full-frame mirrorless camera with 24.2MP sensor and 40fps burst shooting.",
+    "price": 2499,
+    "category": "Cameras",
+    "brand": "Canon",
+    "images": ["https://example.com/images/r6m2.jpg"],
+    "stock": 12,
+    "sku": "EOSR6-MK2",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Sensor": "24.2MP Full-Frame",
+      "Video": "4K 60fps",
+      "Mount": "RF"
+    },
+    "tags": ["camera", "canon"],
+    "addedBy": "6740a8888888888888888888",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Nintendo Switch OLED",
+    "slug": "nintendo-switch-oled",
+    "description": "Hybrid gaming console with vibrant 7-inch OLED display.",
+    "price": 349,
+    "category": "Gaming",
+    "brand": "Nintendo",
+    "images": ["https://example.com/images/switch-oled.jpg"],
+    "stock": 100,
+    "sku": "NSW-OLED",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Display": "7-inch OLED",
+      "Storage": "64GB",
+      "Modes": "Handheld / Docked"
+    },
+    "tags": ["gaming", "nintendo"],
+    "addedBy": "6740a9999999999999999999",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "PlayStation 5 Slim",
+    "slug": "playstation-5-slim",
+    "description": "PS5 Slim with 1TB storage and improved thermals.",
+    "price": 499,
+    "category": "Gaming",
+    "brand": "Sony",
+    "images": ["https://example.com/images/ps5-slim.jpg"],
+    "stock": 80,
+    "sku": "PS5-SLIM",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Storage": "1TB",
+      "Output": "4K HDR",
+      "Controller": "DualSense"
+    },
+    "tags": ["gaming", "ps5"],
+    "addedBy": "6740b1111111111111111111",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Apple Watch Series 10",
+    "slug": "apple-watch-series-10",
+    "description": "Latest Apple Watch with improved sensors and new OLED panel.",
+    "price": 499,
+    "category": "Wearables",
+    "brand": "Apple",
+    "images": ["https://example.com/images/watch10.jpg"],
+    "stock": 90,
+    "sku": "AWS10-45MM",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Size": "45mm",
+      "Battery": "18 hours",
+      "Connectivity": "GPS + Cellular"
+    },
+    "tags": ["wearable", "apple"],
+    "addedBy": "6740b2222222222222222222",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Fitbit Charge 6",
+    "slug": "fitbit-charge-6",
+    "description": "Advanced fitness tracker with Google Maps and heart monitoring.",
+    "price": 159,
+    "category": "Wearables",
+    "brand": "Fitbit",
+    "images": ["https://example.com/images/charge6.jpg"],
+    "stock": 200,
+    "sku": "FBC6-BLK",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Battery": "7 days",
+      "WaterResistance": "50m"
+    },
+    "tags": ["fitness", "wearable"],
+    "addedBy": "6740b3333333333333333333",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "LG C3 55-inch OLED TV",
+    "slug": "lg-c3-oled-55",
+    "description": "LG's premium OLED TV with α9 AI Processor Gen6.",
+    "price": 1899,
+    "category": "Televisions",
+    "brand": "LG",
+    "images": ["https://example.com/images/lgc3-55.jpg"],
+    "stock": 14,
+    "sku": "LGC3-55",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Resolution": "4K OLED",
+      "RefreshRate": "120Hz",
+      "HDR": "Dolby Vision"
+    },
+    "tags": ["tv", "oled"],
+    "addedBy": "6740b4444444444444444444",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "GoPro Hero 12 Black",
+    "slug": "gopro-hero-12",
+    "description": "Action camera with HyperSmooth 6.0 stabilization and 5.3K recording.",
+    "price": 399,
+    "category": "Cameras",
+    "brand": "GoPro",
+    "images": ["https://example.com/images/hero12.jpg"],
+    "stock": 60,
+    "sku": "GPH12",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Resolution": "5.3K",
+      "Waterproof": "10m"
+    },
+    "tags": ["camera", "action"],
+    "addedBy": "6740b5555555555555555555",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Razer BlackWidow V4 Pro",
+    "slug": "razer-blackwidow-v4-pro",
+    "description": "Mechanical gaming keyboard with Razer Green switches and RGB.",
+    "price": 229,
+    "category": "Accessories",
+    "brand": "Razer",
+    "images": ["https://example.com/images/blackwidowv4.jpg"],
+    "stock": 75,
+    "sku": "RBWV4P",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Switches": "Razer Green",
+      "Connectivity": "USB-C"
+    },
+    "tags": ["keyboard", "gaming"],
+    "addedBy": "6740b6666666666666666666",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Apple AirPods Pro 2",
+    "slug": "apple-airpods-pro-2",
+    "description": "Active noise cancellation with Adaptive Transparency and better battery.",
+    "price": 249,
+    "category": "Audio",
+    "brand": "Apple",
+    "images": ["https://example.com/images/airpodspro2.jpg"],
+    "stock": 130,
+    "sku": "APPRO2",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "Chip": "H2",
+      "Battery": "30 hours with case"
+    },
+    "tags": ["earbuds", "apple"],
+    "addedBy": "6740b7777777777777777777",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Anker PowerCore 20K PD",
+    "slug": "anker-powercore-20k-pd",
+    "description": "20,000mAh battery pack with 30W fast charging.",
+    "price": 69,
+    "category": "Accessories",
+    "brand": "Anker",
+    "images": ["https://example.com/images/powercore20k.jpg"],
+    "stock": 200,
+    "sku": "APC20KPD",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Capacity": "20,000mAh",
+      "Output": "30W PD"
+    },
+    "tags": ["powerbank", "charger"],
+    "addedBy": "6740b8888888888888888888",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "Xiaomi Mi Smart Band 8",
+    "slug": "xiaomi-mi-smart-band-8",
+    "description": "Lightweight fitness band with AMOLED display and 150+ sport modes.",
+    "price": 49,
+    "category": "Wearables",
+    "brand": "Xiaomi",
+    "images": ["https://example.com/images/smartband8.jpg"],
+    "stock": 250,
+    "sku": "MIB8-BLK",
+    "isActive": true,
+    "isFeatured": false,
+    "specifications": {
+      "Battery": "16 days",
+      "Display": "1.62-inch AMOLED"
+    },
+    "tags": ["fitness", "band"],
+    "addedBy": "6740b9999999999999999999",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
+  },
+  {
+    "name": "HP Envy 34 AIO",
+    "slug": "hp-envy-34-aio",
+    "description": "34-inch all-in-one workstation with Intel i7 and RTX 3050.",
+    "price": 1999,
+    "category": "Computers",
+    "brand": "HP",
+    "images": ["https://example.com/images/envy34.jpg"],
+    "stock": 10,
+    "sku": "HPENVY34",
+    "isActive": true,
+    "isFeatured": true,
+    "specifications": {
+      "CPU": "Intel Core i7-13700",
+      "Display": "34-inch UltraWide",
+      "GPU": "RTX 3050"
+    },
+    "tags": ["aio", "desktop"],
+    "addedBy": "6740c1111111111111111111",
+    "createdAt": "2025-11-14T00:00:00.000Z",
+    "updatedAt": "2025-11-14T00:00:00.000Z"
   }
 ]

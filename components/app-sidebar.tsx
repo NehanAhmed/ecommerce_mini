@@ -1,22 +1,20 @@
-"use client"
+'use client'
 
 import * as React from "react"
 import {
-  IconCamera,
   IconChartBar,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
+  IconShoppingCart,
+  IconPackage,
+  IconUsers,
+  IconReceipt,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
+  IconLogout,
+  IconTrendingUp,
+  IconTags,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
@@ -34,82 +32,77 @@ import {
 } from "@/components/ui/sidebar"
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
+      title: "Products",
+      url: "/dashboard/products",
+      icon: IconPackage,
+    },
+    {
+      title: "Orders",
+      url: "/dashboard/orders",
+      icon: IconReceipt,
+    },
+    {
+      title: "Customers",
+      url: "/dashboard/customers",
+      icon: IconUsers,
     },
     {
       title: "Analytics",
-      url: "#",
+      url: "/dashboard/analytics",
       icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
     },
   ],
   navClouds: [
     {
-      title: "Capture",
-      icon: IconCamera,
+      title: "Sales",
+      icon: IconTrendingUp,
       isActive: true,
-      url: "#",
+      url: "/dashboard/sales",
       items: [
         {
-          title: "Active Proposals",
-          url: "#",
+          title: "Revenue",
+          url: "/dashboard/sales/revenue",
         },
         {
-          title: "Archived",
-          url: "#",
+          title: "Top Products",
+          url: "/dashboard/sales/top-products",
         },
       ],
     },
     {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
+      title: "Promotions",
+      icon: IconTags,
+      url: "/dashboard/promotions",
       items: [
         {
-          title: "Active Proposals",
-          url: "#",
+          title: "Active Deals",
+          url: "/dashboard/promotions/active",
         },
         {
-          title: "Archived",
-          url: "#",
+          title: "Coupons",
+          url: "/dashboard/promotions/coupons",
         },
       ],
     },
     {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
+      title: "Inventory",
+      icon: IconShoppingCart,
+      url: "/dashboard/inventory",
       items: [
         {
-          title: "Active Proposals",
-          url: "#",
+          title: "Stock Levels",
+          url: "/dashboard/inventory/stock",
         },
         {
-          title: "Archived",
-          url: "#",
+          title: "Low Stock",
+          url: "/dashboard/inventory/low-stock",
         },
       ],
     },
@@ -117,11 +110,11 @@ const data = {
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/dashboard/settings",
       icon: IconSettings,
     },
     {
-      title: "Get Help",
+      title: "Help & Support",
       url: "#",
       icon: IconHelp,
     },
@@ -133,35 +126,49 @@ const data = {
   ],
   documents: [
     {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
+      name: "Recent Orders",
+      url: "/dashboard/orders",
+      icon: IconReceipt,
+    },
+    {
+      name: "Cart Summary",
+      url: "/dashboard/cart-summary",
+      icon: IconShoppingCart,
     },
     {
       name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
+      url: "/dashboard/reports",
+      icon: IconChartBar,
     },
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user?: {
+    username: string
+    email: string
+    avatar: string
+  }
+}
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
+  const defaultUser = {
+    firstName: user?.username || "Guest User",
+    email: user?.email || "guest@example.com",
+    avatar: user?.avatar || "/avatars/shadcn.jpg",
+  }
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <a href="#">
-                <IconInnerShadowTop className="!size-5" />
+                <IconInnerShadowTop className="size-5!" />
                 <span className="text-base font-semibold">Acme Inc.</span>
               </a>
             </SidebarMenuButton>
@@ -174,7 +181,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={defaultUser} />
       </SidebarFooter>
     </Sidebar>
   )
