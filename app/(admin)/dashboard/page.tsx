@@ -17,7 +17,7 @@ export default async function Page() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
   const response = await fetch(`${BASE_URL}/api/list-products`)
 
-  if (!response) throw new Error("Error fetching Products")
+  if (!response.ok) throw new Error("Error fetching Products")
 
   const data = await response.json()
   const products = await data.products
