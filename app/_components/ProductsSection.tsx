@@ -13,6 +13,7 @@ const ProductsPage = ({ products: initialData }: { products: IProduct }) => {
     const dataArray = Array.isArray(initialData) ? initialData : []
 
     const sanitizedData = (dataArray || []).map((item) => ({
+        _id: item._id,
         name: item.name || "Unknown Product",
         slug: item.slug || "",
         description: item.description || "Premium product with excellent quality",
@@ -149,7 +150,7 @@ const ProductsPage = ({ products: initialData }: { products: IProduct }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 lg:gap-10">
                     {data.map((product) => (
                         <div key={product.sku} className="flex justify-center w-md">
-                            <ProductCard product={product}/>
+                            <ProductCard product={product} />
                         </div>
                     ))}
                 </div>

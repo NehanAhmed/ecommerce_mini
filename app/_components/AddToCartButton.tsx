@@ -20,10 +20,14 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
 
   const handleAddToCart = () => {
     addToCart({
-      ...product,
-      quantity,
-    });
-    
+      _id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      slug: product.slug,
+      quantity: quantity
+    })
+
     // Show feedback
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
@@ -51,11 +55,10 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
       {/* Add to Cart Button */}
       <button
         onClick={handleAddToCart}
-        className={`px-6 py-3 rounded font-semibold transition ${
-          isAdded
+        className={`px-6 py-3 rounded font-semibold transition ${isAdded
             ? 'bg-green-500 text-white'
             : 'bg-blue-600 text-white hover:bg-blue-700'
-        }`}
+          }`}
       >
         {isAdded ? '✓ Added!' : 'Add to Cart'}
       </button>

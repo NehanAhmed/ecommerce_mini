@@ -4,10 +4,84 @@ import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Package, X } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Package, X, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
+  
+  // ✨ NEW: States for Stripe checkout
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState('');
+
+  // ✨ NEW: Function to handle Stripe checkout
+  const handleStripeCheckout = async () => {
+    setIsCheckoutLoading(true);
+    setCheckoutError(''); // Clear any previous errors
+    
+    try {
+      type CheckoutItemPayload = {
+        id: string;
+        name: string;
+        price: number;
+        quantity: number;
+        image?: string | null;
+      };
+
+      // Prepare cart items in the format our API expects
+      const stripeItems: CheckoutItemPayload[] = cart
+        // Filter out any legacy/invalid items that might be missing required fields
+        .filter((item) => item && item._id && item.name && typeof item.price === 'number' && typeof item.quantity === 'number')
+        .map((item) => ({
+          id: item._id,
+          name: item.name,
+          price: item.price, // Price in dollars
+          quantity: item.quantity,
+          image: item.image,
+        }));
+
+      if (stripeItems.length === 0) {
+        setCheckoutError('Your cart data is invalid. Please clear your cart and add the items again.');
+        setIsCheckoutLoading(false);
+        return;
+      }
+
+      console.log('Sending items to Stripe:', stripeItems); // Debug log
+
+      // Call our Stripe API
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: stripeItems,
+        }),
+      });
+
+      type CheckoutResponse = {
+        url?: string;
+        error?: string;
+      };
+
+      const data: CheckoutResponse = await response.json();
+
+      // Check if we got a checkout URL back
+      if (data.url) {
+        // Redirect to Stripe checkout page
+        window.location.href = data.url;
+      } else {
+        // Something went wrong
+        setCheckoutError(data.error || 'Unable to start checkout. Please try again.');
+        setIsCheckoutLoading(false);
+      }
+      
+    } catch (error) {
+      console.error('Checkout error:', error);
+      setCheckoutError('Something went wrong. Please check your connection and try again.');
+      setIsCheckoutLoading(false);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -15,7 +89,7 @@ export default function CartPage() {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2
+        delayChildren: 0.2  
       }
     }
   };
@@ -39,7 +113,7 @@ export default function CartPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen  bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -122,7 +196,7 @@ export default function CartPage() {
             <AnimatePresence mode="popLayout">
               {cart.map((item, index) => (
                 <motion.div
-                  key={item.id}
+                  key={item._id}
                   variants={itemVariants}
                   initial="hidden"
                   animate="visible"
@@ -139,8 +213,8 @@ export default function CartPage() {
                       <Image
                         src={item.image}
                         alt={item.name}
-                        fill
-                        
+                        width={100}
+                        height={100}
                         className="object-cover"
                       />
                     </motion.div>
@@ -286,34 +360,58 @@ export default function CartPage() {
                 </motion.div>
               </div>
 
+              {/* ✨ UPDATED: Checkout Button with Stripe */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: isCheckoutLoading ? 1 : 1.02 }}
+                whileTap={{ scale: isCheckoutLoading ? 1 : 0.98 }}
               >
-                <Link
-                  href="/checkout"
-                  className="group relative block w-full bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white text-center py-4 rounded-full font-semibold shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 overflow-hidden"
+                <button
+                  onClick={handleStripeCheckout}
+                  disabled={isCheckoutLoading}
+                  className="group relative block w-full bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white text-center py-4 rounded-full font-semibold shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Proceed to Checkout
-                    <motion.div
-                      animate={{ x: [0, 5, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <ArrowRight className="w-5 h-5" />
-                    </motion.div>
+                    {isCheckoutLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        Proceed to Checkout
+                        <motion.div
+                          animate={{ x: [0, 5, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        >
+                          <ArrowRight className="w-5 h-5" />
+                        </motion.div>
+                      </>
+                    )}
                   </span>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600"
-                    initial={{ x: '100%' }}
-                    whileHover={{ x: 0 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </Link>
+                  {!isCheckoutLoading && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600"
+                      initial={{ x: '100%' }}
+                      whileHover={{ x: 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                </button>
               </motion.div>
+
+              {/* ✨ NEW: Error Message */}
+              {checkoutError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-2xl text-red-600 dark:text-red-400 text-sm"
+                >
+                  {checkoutError}
+                </motion.div>
+              )}
 
               {/* Trust Badges */}
               <motion.div
