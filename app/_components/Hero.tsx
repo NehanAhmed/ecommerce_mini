@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronRight, Sparkles } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react"
 import Link from "next/link";
