@@ -155,6 +155,7 @@ export default function NotFoundPage() {
                             className="group relative px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => router.push('/dashboard')}
                         >
                             <motion.div
                                 className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary"
@@ -178,6 +179,7 @@ export default function NotFoundPage() {
                             className="group px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => router.push('/products')}
                         >
                             <span className="flex items-center gap-2">
                                 <Search className="w-5 h-5 group-hover:rotate-12 transition-transform" />
