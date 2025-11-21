@@ -6,11 +6,10 @@ import { cloneElement, isValidElement } from "react";
 interface MetricCardProps {
   title: string;
   value: number | string;
-  icon: React.ReactNode;
-  iconBgClass: string; // e.g., "bg-primary/10"
-  iconColorClass: string; // e.g., "text-primary"
+  icon: React.ReactElement<{ className?: string }>;
+  iconBgClass: string;
+  iconColorClass: string;
 }
-
 export function MetricCard({
   title,
   value,
@@ -34,8 +33,8 @@ export function MetricCard({
         <p className="text-sm text-muted-foreground font-medium">{title}</p>
         <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", iconBgClass)}>
           {isValidElement(icon) ? (
-            cloneElement(icon as React.ReactElement, {
-              className: cn("w-6 h-6", iconColorClass),
+            cloneElement(icon, {
+              className: cn("w-6 h-6", iconColorClass, icon.props.className),
             })
           ) : (
             <span className={cn("w-4 h-4 rounded-full", iconColorClass)}></span>
