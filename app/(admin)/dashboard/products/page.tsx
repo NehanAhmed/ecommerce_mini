@@ -12,22 +12,20 @@ import {
 import ProductsDisplay from '../../_components/ProductsDisplay';
 import { MetricCard } from '../../_components/MetricCard';
 import Link from 'next/link';
+import { Product } from '@/database';
+import connectDB from '@/lib/mongodb';
 
 
 const ProductsDashboard = async () => {
-    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
-    const response = await fetch(`${BASE_URL}/api/list-products`)
-    if (!response) throw new Error("Error fetching Products")
+    await connectDB();
 
-    const data = await response.json()
-    // Extract the products array from the response object
-    const products = data.products || []
+    const products = await Product.find().sort({ createdAt: -1 });
 
     // Calculate metrics from products data
-    const totalProducts = products.length
-    const activeProducts = products.filter((p: any) => p.stock > 0).length
-    const lowStockProducts = products.filter((p: any) => p.stock > 0 && p.stock <= 10).length
-    const outOfStockProducts = products.filter((p: any) => p.stock === 0).length
+    const totalProducts = products.length;
+    const activeProducts = products.filter((p: any) => p.stock > 0).length;
+    const lowStockProducts = products.filter((p: any) => p.stock > 0 && p.stock <= 10).length;
+    const outOfStockProducts = products.filter((p: any) => p.stock === 0).length;
 
 
     return (
