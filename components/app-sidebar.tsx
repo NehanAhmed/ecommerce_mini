@@ -151,12 +151,8 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   }
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
-  const defaultUser = {
-    firstname: user?.username || "Guest User",
-    email: user?.email || "guest@example.com",
-    avatar: user?.avatar || "/avatars/shadcn.jpg",
-  }
+export function AppSidebar({  ...props }: AppSidebarProps) {
+  
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -181,7 +177,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={defaultUser} />
+        <NavUser  />
       </SidebarFooter>
     </Sidebar>
   )
