@@ -20,7 +20,7 @@ export default function ProductDetailPage({ data: initialData }: { data: z.infer
         throw new Error("ProductDetailPage: No valid data received");
     }
 
-    const sanitizedData = dataArray.map((item) => ({
+    const sanitizedData = dataArray.map((item: any) => ({
         name: item?.name || "Unknown Product",
         slug: item?.slug || "",
         description: item?.description || "Premium product with excellent quality",
@@ -90,8 +90,8 @@ export default function ProductDetailPage({ data: initialData }: { data: z.infer
 
                                         />
                                     </div>
-                                    <div className="p-4 grid grid-cols-3 gap-3">
-                                        {product.images.map((img, idx) => (
+                                        <div className="p-4 grid grid-cols-3 gap-3">
+                                        {product.images.map((img: string, idx: number) => (
                                             <Button
                                                 key={idx}
                                                 onClick={() => setSelectedImage(idx)}
@@ -202,8 +202,8 @@ export default function ProductDetailPage({ data: initialData }: { data: z.infer
                                             <BarChart3 className="w-5 h-5 text-muted-foreground" />
                                             <h2 className="text-lg font-semibold text-foreground">Specifications</h2>
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-                                            {Object.entries(product.specifications).map(([key, value]) => (
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                                            {Object.entries(product.specifications as Record<string, string>).map(([key, value]) => (
                                                 <div key={key} className="flex justify-between py-2 border-b border-border last:border-0">
                                                     <span className="text-sm text-muted-foreground">{key}</span>
                                                     <span className="text-sm font-medium text-foreground">{value}</span>
@@ -221,7 +221,7 @@ export default function ProductDetailPage({ data: initialData }: { data: z.infer
                                             <h2 className="text-lg font-semibold text-foreground">Tags</h2>
                                         </div>
                                         <div className="flex flex-wrap gap-2">
-                                            {product.tags.map((tag, idx) => (
+                                            {product.tags.map((tag: string, idx: number) => (
                                                 <span
                                                     key={idx}
                                                     className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-sm font-medium"

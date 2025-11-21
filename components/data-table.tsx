@@ -348,7 +348,7 @@ export function DataTable({
     [data]
   )
 
-  const table = useReactTable({
+  const table = useReactTable<z.infer<typeof schema>>({
     data,
     columns,
     state: {

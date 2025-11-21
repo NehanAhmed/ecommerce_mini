@@ -8,7 +8,12 @@ import Hero from '../_components/Hero';
 import Stats from '../_components/Stats';
 import FeauturedProduct from '../_components/FeauturedProduct';
 
-const AnimatedSection = ({ children, className = "" }) => {
+interface AnimatedSectionProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const AnimatedSection = ({ children, className = "" }: AnimatedSectionProps) => {
   const ref = React.useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -25,7 +30,12 @@ const AnimatedSection = ({ children, className = "" }) => {
   );
 };
 
-const FloatingCard = ({ children, delay = 0 }) => {
+interface FloatingCardProps {
+  children: React.ReactNode;
+  delay?: number;
+}
+
+const FloatingCard = ({ children, delay = 0 }: FloatingCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

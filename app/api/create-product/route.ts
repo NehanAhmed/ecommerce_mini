@@ -9,7 +9,7 @@ import { uploadFilesToCloudinary } from "@/lib/cloudinary-buffer";
 async function validateProductFormData(formData: FormData): Promise<{
     isValid: boolean;
     errors: string[];
-    product?: Omit<ProductInput, 'images'>;
+    product?: ProductInput;
     files?: File[];
 }> {
     const errors: string[] = [];
@@ -126,7 +126,7 @@ async function validateProductFormData(formData: FormData): Promise<{
         return { isValid: false, errors };
     }
 
-    const product: Omit<ProductInput, 'images'> = {
+    const product: ProductInput = {
         name: (name as string).trim(),
         description: (description as string).trim(),
         price,
