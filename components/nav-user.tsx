@@ -31,11 +31,7 @@ import {
 
 import { IUser } from "@/types/IUser"
 import { UserButton } from "@clerk/nextjs"
-export function NavUser({
-  user,
-}: {
-  user: IUser
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar()
 
   return (

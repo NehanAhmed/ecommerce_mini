@@ -1,14 +1,6 @@
 import { Search, Plus, Download, Tag, Package, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import ProductsDisplay from '../../_components/ProductsDisplay';
 import { MetricCard } from '../../_components/MetricCard';
 import Link from 'next/link';

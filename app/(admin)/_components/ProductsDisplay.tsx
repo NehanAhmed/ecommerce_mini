@@ -6,27 +6,20 @@ import { Plus, Download, Tag, Package } from 'lucide-react';
 import { DataTable } from '@/components/data-table';
 import { useEffect, useState } from 'react';
 
-interface ProductsDisplayProps {
-  data?: any;
-}
 
-function ProductsDisplay({ data }: ProductsDisplayProps) {
+
+function ProductsDisplay() {
   const [products, setProducts] = useState<any[]>([])
-  const [loading, setLoading] = useState(!data)
+
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     // If data is passed as prop, use it directly
-    if (data && Array.isArray(data)) {
-      setProducts(data)
-      setLoading(false)
-      return
-    }
+   
 
     // Otherwise fetch from API
     const fetchProducts = async () => {
       try {
-        setLoading(true)
         const response = await fetch("http://localhost:3000/api/list-products")
         if (!response.ok) throw new Error("Failed to fetch products")
         const result = await response.json()
@@ -44,27 +37,14 @@ function ProductsDisplay({ data }: ProductsDisplayProps) {
         setError(err instanceof Error ? err.message : "An error occurred")
         setProducts([])
       } finally {
-        setLoading(false)
+        
       }
     }
 
     fetchProducts()
-  }, [data])
+  }, [])
 
-  if (loading) {
-    return (
-      <main>
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="mb-4 flex justify-center">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-300 border-t-blue-600 dark:border-slate-700 dark:border-t-blue-500"></div>
-            </div>
-            <p className="text-muted-foreground">Loading products...</p>
-          </div>
-        </div>
-      </main>
-    )
-  }
+  
 
   if (error) {
     return (
