@@ -226,7 +226,7 @@ OrderSchema.pre('save', async function (next) {
     }).select('_id');
 
     if (existingProducts.length !== productIds.length) {
-      const existingIds = existingProducts.map((p) => p._id.toString());
+      const existingIds = existingProducts.map((p) => String((p as { _id: unknown })._id));
       const missingIds = productIds.filter(
         (id) => !existingIds.includes(id.toString())
       );

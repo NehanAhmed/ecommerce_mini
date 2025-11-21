@@ -24,7 +24,7 @@ export default function SuccessPage() {
     }, [sessionId]);
 
     // Animation variants
-    const containerVariants = {
+    const containerVariants: any = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -35,7 +35,7 @@ export default function SuccessPage() {
         },
     };
 
-    const itemVariants = {
+    const itemVariants: any = {
         hidden: { opacity: 0, y: 50 },
         visible: {
             opacity: 1,
@@ -47,7 +47,7 @@ export default function SuccessPage() {
         },
     };
 
-    const iconVariants = {
+    const iconVariants: any = {
         hidden: { scale: 0, rotate: -180 },
         visible: {
             scale: 1,
@@ -61,9 +61,9 @@ export default function SuccessPage() {
         },
     };
 
-    const cardVariants = {
+    const cardVariants: any = {
         hidden: { opacity: 0, y: 30 },
-        visible: (custom) => ({
+        visible: (custom: number) => ({
             opacity: 1,
             y: 0,
             transition: {
@@ -71,7 +71,6 @@ export default function SuccessPage() {
                 ease: [0.22, 1, 0.36, 1],
                 delay: custom * 0.1,
             },
-            Error
         }),
     };
 
@@ -274,13 +273,13 @@ export default function SuccessPage() {
                         className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
                     >
 
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
-                            onClick={()=>{
-                                clearCart
-                                router.push("/")
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
+                                onClick={() => {
+                                clearCart();
+                                router.push("/");
                             }}
                         >
                             Continue Shopping

@@ -103,13 +103,13 @@ async function handleSuccessfulCheckout(session: Stripe.Checkout.Session) {
     }
 
     // Retrieve full session with expanded data
-    const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+    const fullSession = (await stripe.checkout.sessions.retrieve(session.id, {
         expand: ['line_items', 'line_items.data.price.product'],
-    });
+    })) as Stripe.Checkout.Session;
 
     const lineItems = fullSession.line_items?.data || [];
     const customerDetails = fullSession.customer_details;
-    const shippingDetails = fullSession.shipping_details || customerDetails;
+    const shippingDetails = (fullSession as any).shipping_details || customerDetails;
 
     // Parse item IDs from metadata (set during checkout)
     let itemIdMap: Record<string, string> = {};

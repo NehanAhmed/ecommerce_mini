@@ -153,7 +153,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const defaultUser = {
-    firstName: user?.username || "Guest User",
+    firstname: user?.username || "Guest User",
     email: user?.email || "guest@example.com",
     avatar: user?.avatar || "/avatars/shadcn.jpg",
   }

@@ -3,19 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useAnimation } from 'motion/react';
 import { Home, Search, ShoppingBag, ArrowRight, Package } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function NotFoundPage() {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const controls = useAnimation();
+    const router = useRouter();
 
     useEffect(() => {
         controls.start({
             rotate: [0, 5, -5, 0],
-            transition: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+            transition: { duration: 4, repeat: Infinity, ease: [0.42, 0, 0.58, 1] }
         });
     }, [controls]);
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const { clientX, clientY } = e;
         const { innerWidth, innerHeight } = window;
         const x = (clientX / innerWidth - 0.5) * 20;
@@ -23,7 +25,7 @@ export default function NotFoundPage() {
         setMousePosition({ x, y });
     };
 
-    const containerVariants = {
+    const containerVariants: any = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -34,7 +36,7 @@ export default function NotFoundPage() {
         }
     };
 
-    const itemVariants = {
+    const itemVariants: any = {
         hidden: { y: 20, opacity: 0 },
         visible: {
             y: 0,
@@ -47,13 +49,13 @@ export default function NotFoundPage() {
         }
     };
 
-    const floatingVariants = {
+    const floatingVariants: any = {
         animate: {
             y: [-10, 10, -10],
             transition: {
                 duration: 3,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: [0.42, 0, 0.58, 1],
             }
         }
     };

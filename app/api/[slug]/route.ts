@@ -100,7 +100,7 @@ export async function GET(
     const responseBody: ProductResponse = {
       message: "Product fetched successfully",
       product: {
-        id: product._id.toString(),
+        id: String((product as any)._id),
         name: product.name,
         slug: product.slug,
         description: product.description,

@@ -32,7 +32,7 @@ export const ProductDetailPage: React.FC<ProductDetailsProps> = ({ product }) =>
     ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
     : 0;
 
-  const fadeInUp = {
+  const fadeInUp: any = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
@@ -41,7 +41,7 @@ export const ProductDetailPage: React.FC<ProductDetailsProps> = ({ product }) =>
     }
   };
 
-  const staggerContainer = {
+  const staggerContainer: any = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -52,7 +52,7 @@ export const ProductDetailPage: React.FC<ProductDetailsProps> = ({ product }) =>
     }
   };
 
-  const imageVariants = {
+  const imageVariants: any = {
     enter: (direction: number) => ({
       x: direction > 0 ? 1000 : -1000,
       opacity: 0
