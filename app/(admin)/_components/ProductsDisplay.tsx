@@ -15,12 +15,13 @@ function ProductsDisplay() {
 
   useEffect(() => {
     // If data is passed as prop, use it directly
-   
+
 
     // Otherwise fetch from API
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/list-products")
+        const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+        const response = await fetch(`${BASE_URL}/api/list-products`)
         if (!response.ok) throw new Error("Failed to fetch products")
         const result = await response.json()
 
@@ -37,14 +38,14 @@ function ProductsDisplay() {
         setError(err instanceof Error ? err.message : "An error occurred")
         setProducts([])
       } finally {
-        
+
       }
     }
 
     fetchProducts()
   }, [])
 
-  
+
 
   if (error) {
     return (
