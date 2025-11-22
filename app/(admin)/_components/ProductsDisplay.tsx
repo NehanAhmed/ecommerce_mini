@@ -20,8 +20,8 @@ function ProductsDisplay() {
     // Otherwise fetch from API
     const fetchProducts = async () => {
       try {
-        const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
-        const response = await fetch(`${BASE_URL}/api/list-products`)
+        
+        const response = await fetch(`/api/list-products`)
         if (!response.ok) throw new Error("Failed to fetch products")
         const result = await response.json()
 
