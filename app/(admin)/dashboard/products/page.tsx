@@ -121,7 +121,7 @@ const ProductsDashboard = async () => {
             </section>
 
             {/* Main Content Area */}
-            <ProductsDisplay data={products} />
+            <ProductsDisplay  />
         </div>
     );
 };
