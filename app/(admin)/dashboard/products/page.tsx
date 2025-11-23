@@ -6,14 +6,19 @@ import { MetricCard } from '../../_components/MetricCard';
 import Link from 'next/link';
 import { Product } from '@/database';
 import connectDB from '@/lib/mongodb';
+import { DataTable } from '@/components/data-table';
 
 
 const ProductsDashboard = async () => {
-    await connectDB();
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
-    const products = await Product.find().sort({ createdAt: -1 });
+    const response = await fetch(`${BASE_URL}/api/list-products`)
+    if (!response) throw new Error("Error fetchin Products")
 
-    // Calculate metrics from products data
+    const data = await response.json()
+
+    const products = await data.products || []
+     // Calculate metrics from products data
     const totalProducts = products.length;
     const activeProducts = products.filter((p: any) => p.stock > 0).length;
     const lowStockProducts = products.filter((p: any) => p.stock > 0 && p.stock <= 10).length;
@@ -121,7 +126,7 @@ const ProductsDashboard = async () => {
             </section>
 
             {/* Main Content Area */}
-            <ProductsDisplay  />
+            <DataTable data={products} />
         </div>
     );
 };
