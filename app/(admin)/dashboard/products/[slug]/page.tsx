@@ -1,5 +1,5 @@
 import ProductDetailPage from "@/app/(admin)/_components/ProductsDetail"
-
+export const dynamic = 'force-dynamic'
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
     const { slug } = await params

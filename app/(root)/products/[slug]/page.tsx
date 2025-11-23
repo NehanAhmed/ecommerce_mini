@@ -1,6 +1,6 @@
 import { ProductDetailPage } from '@/app/_components/ProductDetail'
 import React from 'react'
-
+export const dynamic = 'force-dynamic'
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const { slug } = await params
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
