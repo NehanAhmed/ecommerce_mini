@@ -1,5 +1,6 @@
 import ProductsPage from '@/app/_components/ProductsSection'
 import React from 'react'
+export const dynamic = 'force-dynamic'
 
 const page = async () => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL

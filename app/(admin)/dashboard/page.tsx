@@ -1,17 +1,8 @@
-import { AppSidebar } from "@/components/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
 import { SectionCards } from "@/components/section-cards"
-import { SiteHeader } from "@/components/site-header"
-import { columns, Order } from "@/components/table/columns"
 
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar"
-
-import data from "./data.json"
-import { IProduct } from "@/database"
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
@@ -20,7 +11,7 @@ export default async function Page() {
   if (!response.ok) throw new Error("Error fetching Products")
 
   const data = await response.json()
-  const products = await data.products
+  const products = await data.products || []
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">

@@ -7,7 +7,7 @@ import { Product } from '@/database';
 import connectDB from '@/lib/mongodb';
 import { DataTable } from '@/components/data-table';
 
-
+export const dynamic = 'force-dynamic'
 const ProductsDashboard = async () => {
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
