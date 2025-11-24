@@ -11,6 +11,7 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import { CartProvider } from "@/context/CartContext";
+import { Suspense } from "react";
 const poppins = ({
   variable: "--font-poppins",
   subsets: ["latin"],
@@ -44,7 +45,10 @@ export default function RootLayout({
           >
 
             <CartProvider>
+              <Suspense fallback={null} >
+
               {children}
+              </Suspense>
             </CartProvider>
           </ThemeProvider>
         </body>
