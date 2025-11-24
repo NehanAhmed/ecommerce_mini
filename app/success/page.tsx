@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Package, Mail, Download, ArrowRight, Sparkles, CreditCard, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+export const dynamic = "force-dynamic";
 
 export default function SuccessPage() {
     const searchParams = useSearchParams();
