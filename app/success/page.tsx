@@ -78,7 +78,7 @@ export default function SuccessPage() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-blue-950/30 relative overflow-hidden">
+            <div className="min-h-screen bg-linear-to-br from-blue-50/50 via-white to-purple-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-blue-950/30 relative overflow-hidden">
                 {/* Animated Background Pattern */}
                 <div className="absolute inset-0 z-0">
                     <motion.div
